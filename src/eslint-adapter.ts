@@ -3,6 +3,9 @@ import { Linter, CLIEngine } from "eslint";
 import { AstConverter } from "./ast-converter";
 import { InvalidParserError } from "./errors";
 
+// TODO refactor global const
+export const TS_LANGSERVICE_ESLINT_DIAGNOSTIC_ERROR_CODE = 30010;
+
 export function translateESLintResult(result: Linter.LintMessage[], sourceFile: ts.SourceFile): ts.Diagnostic[] {
   return result.map(message => {
     const { message: messageText, severity, ruleId, line, column, endLine, endColumn } = message;
@@ -23,7 +26,7 @@ export function translateESLintResult(result: Linter.LintMessage[], sourceFile: 
     const diagnostic: ts.Diagnostic = {
       file: sourceFile,
       category,
-      code: 99999, // TODO retrieve from ruleId
+      code: TS_LANGSERVICE_ESLINT_DIAGNOSTIC_ERROR_CODE,
       messageText,
       start,
       length,

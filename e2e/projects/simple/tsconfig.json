@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "module": "commonjs"
+    "module": "commonjs",
     "plugins": [
       { "name": "typescript-eslint-language-service" }
     ]
