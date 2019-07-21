@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "test": "jest",
-    "e2e": "jest --config e2e/jest.config.json"
+    "e2e": "jest --config e2e/jest.config.json",
+    "prepare": "rimraf lib && npm run build"
   },
   "repository": {
     "type": "git",
@@ -35,6 +36,7 @@
     "@typescript-eslint/parser": "^1.12.0",
     "eslint": "^6.0.1",
     "jest": "^24.8.0",
+    "rimraf": "^2.6.3",
     "ts-jest": "^24.0.2",
     "typescript": "~3.5.0"
   },

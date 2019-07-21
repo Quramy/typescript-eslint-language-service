@@ -50,7 +50,7 @@ jobs:
       - run:
           name: Publish
           command: |
-            yarn publish:npm
+            yarn publish
 
 workflows:
   version: 2
