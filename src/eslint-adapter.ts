@@ -7,8 +7,8 @@ import { InvalidParserError } from "./errors";
 export const TS_LANGSERVICE_ESLINT_DIAGNOSTIC_ERROR_CODE = 30010;
 
 export function translateESLintResult(result: Linter.LintMessage[], sourceFile: ts.SourceFile): ts.Diagnostic[] {
-  return result.map(message => {
-    const { message: messageText, severity, ruleId, line, column, endLine, endColumn } = message;
+  return result.map(({ message, severity, ruleId, line, column, endLine, endColumn })=> {
+    const messageText = `[${ruleId}] ${message}`;
 
     const category: ts.DiagnosticCategory = 
       severity === 2 ? ts.DiagnosticCategory.Error :
@@ -44,7 +44,8 @@ export type ESLintAdapterOptions = {
 
 export class ESLintAdapter {
   readonly cliEngine: CLIEngine;
-  readonly linter: Linter;
+  readonly loadedPlugins: string[];
+  linter: Linter;
   logger: (msg: string) => void;
   converter: AstConverter;
   getSourceFile: (fileName: string) => ts.SourceFile | undefined;
@@ -54,6 +55,7 @@ export class ESLintAdapter {
     converter,
     getSourceFile,
   }: ESLintAdapterOptions) {
+    this.loadedPlugins = [];
     this.cliEngine = new CLIEngine({
       useEslintrc: true,
     });
@@ -71,6 +73,39 @@ export class ESLintAdapter {
     return config;
   }
 
+  loadPlugins(plugins?: string[]) {
+    if (!plugins) return;
+    const pluginNamesToBeLoaded = plugins.filter(name => this.loadedPlugins.every(p => p !== name));
+    if (!pluginNamesToBeLoaded.length) return;
+    const dummy = new CLIEngine({ plugins: pluginNamesToBeLoaded });
+    let i = 0;
+    let j = 0;
+    const definedRuleKeys = [...this.linter.getRules().keys()].sort();
+    const loadedRuleKeys = [...dummy.getRules().keys()].sort();
+    const ruleNameToBeLoaded = [];
+    while(j < loadedRuleKeys.length) {
+      const d = definedRuleKeys[i];
+      if (loadedRuleKeys[j] === d) {
+        i++;
+        j++;
+      } else {
+        ruleNameToBeLoaded.push(loadedRuleKeys[j]);
+        j++;
+      }
+    }
+    const ruleMap = dummy.getRules();
+    ruleNameToBeLoaded.forEach(key => {
+      const rule = ruleMap.get(key);
+      if (!rule) return;
+      this.linter.defineRule(key, rule);
+    });
+
+    pluginNamesToBeLoaded.forEach(name => {
+      this.logger(`eslint plugin was loaded ${name}`);
+      this.loadedPlugins.push(name);
+    });
+  }
+
   getSemanticDiagnostics(delegate: ts.LanguageService["getSemanticDiagnostics"], fileName: string): ReturnType<ts.LanguageService["getSemanticDiagnostics"]> {
     const original = delegate(fileName);
     try {
@@ -79,6 +114,7 @@ export class ESLintAdapter {
         return original;
       }
       const config = this.getLinterConfig(fileName);
+      this.loadPlugins((config as { plugins?: string[] }).plugins);
       const parserOptions = config.parserOptions ? config.parserOptions : { };
       const sourceCode = this.converter.convertToESLintSourceCode(sourceFile, parserOptions);
       const { env, rules, globals, settings } = config;
