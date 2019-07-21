@@ -46,3 +46,6 @@ And configure `plugins` section in your tsconfig.json, for example:
 ```
 
 It's ready to go. Launch your TypeScript IDE.
+
+## LICENSE
+MIT
