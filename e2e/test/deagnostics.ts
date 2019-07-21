@@ -9,7 +9,24 @@ function findResponse(responses: any[], eventName: string) {
 
 describe("LanguageService plugin", () => {
   describe("#getSemanticDiagnostics", () => {
-    it("should return ESLint error", async () => {
+    it("should not return ESLint error when the project use @typescript-eslint/parser", async () => {
+      const server = createServer({ projectPath: path.resolve(__dirname, "../projects/other-parser") });
+      const { file, fileContent } = server.readFile("./main.ts");
+      server.send({ command: "open", arguments: { file, fileContent, scriptKindName: "TS" } });
+      await server.waitEvent("projectLoadingFinish");
+      server.send({ command: "geterr", arguments: { files: [file], delay: 0 } });
+      await server.waitEvent("semanticDiag");
+      const found = findResponse(server.responses, "semanticDiag");
+      if (!found) {
+        throw new assert.AssertionError();
+      }
+      const semanticDiag = found as ts.server.protocol.DiagnosticEvent;
+      expect(semanticDiag.body!.file).toBe(file);
+      expect(semanticDiag.body!.diagnostics.length).toBe(0);
+      await server.close();
+    });
+
+    it("should return ESLint error when the project use @typescript-eslint/parser", async () => {
       const server = createServer({ projectPath: path.resolve(__dirname, "../projects/simple") });
       const { file, fileContent } = server.readFile("./main.ts");
       server.send({ command: "open", arguments: { file, fileContent, scriptKindName: "TS" } });

@@ -1,6 +1,7 @@
 import * as ts from "typescript";
-import { Linter } from "eslint";
+import { Linter, CLIEngine } from "eslint";
 import { AstConverter } from "./ast-converter";
+import { InvalidParserError } from "./errors";
 
 export function translateESLintResult(result: Linter.LintMessage[], sourceFile: ts.SourceFile): ts.Diagnostic[] {
   return result.map(message => {
@@ -39,7 +40,8 @@ export type ESLintAdapterOptions = {
 };
 
 export class ESLintAdapter {
-  linter: Linter;
+  readonly cliEngine: CLIEngine;
+  readonly linter: Linter;
   logger: (msg: string) => void;
   converter: AstConverter;
   getSourceFile: (fileName: string) => ts.SourceFile | undefined;
@@ -49,19 +51,21 @@ export class ESLintAdapter {
     converter,
     getSourceFile,
   }: ESLintAdapterOptions) {
+    this.cliEngine = new CLIEngine({
+      useEslintrc: true,
+    });
     this.linter = new Linter();
     this.logger = logger;
     this.converter = converter;
     this.getSourceFile = getSourceFile;
   }
 
-  getLinterConfig(): Linter.Config {
-    // TODO Create from ESLint config from CLIEngine
-    return {
-      rules: {
-        semi: 2,
-      },
-    };
+  getLinterConfig(fileName: string): Linter.Config {
+    const config = this.cliEngine.getConfigForFile(fileName);
+    if (!config.parser || !/@typescript-eslint\/parser/.test(config.parser)) {
+      throw new InvalidParserError();
+    }
+    return config;
   }
 
   getSemanticDiagnostics(delegate: ts.LanguageService["getSemanticDiagnostics"], fileName: string): ReturnType<ts.LanguageService["getSemanticDiagnostics"]> {
@@ -71,10 +75,17 @@ export class ESLintAdapter {
       if (!sourceFile) {
         return original;
       }
-      const parserOptions = { }; // TODO
+      const config = this.getLinterConfig(fileName);
+      const parserOptions = config.parserOptions ? config.parserOptions : { };
       const sourceCode = this.converter.convertToESLintSourceCode(sourceFile, parserOptions);
-      const config = this.getLinterConfig();
-      const eslintResult = this.linter.verify(sourceCode, config, { filename: fileName });
+      const { env, rules, globals, settings } = config;
+      this.logger(JSON.stringify(rules));
+      const eslintResult = this.linter.verify(sourceCode, {
+        env,
+        rules,
+        globals,
+        settings,
+      }, { filename: fileName });
       return [...original, ...translateESLintResult(eslintResult, sourceFile)];
     } catch (error) {
       this.logger(error.message ? error.message : "unknow error");

@@ -2,6 +2,8 @@
 
 BASE_DIR=$(cd $(dirname $0); pwd)
 
-pushd ${BASE_DIR}/projects/simple
-yarn --pure-lockfile
-popd
+for dir in $(ls ${BASE_DIR}/projects); do
+  pushd ${BASE_DIR}/projects/${dir}
+  yarn --pure-lockfile
+  popd
+done
