@@ -21,7 +21,7 @@ jobs:
       - run: yarn install --frozen-lockfile
       - run: yarn build
       - run: yarn test
-      - run: /bin/sh e2e/setup.sh
+      - run: /bin/bash e2e/setup.sh
       - run: yarn e2e
 
       - save_cache:
