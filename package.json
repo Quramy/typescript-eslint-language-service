@@ -1,0 +1,55 @@
+{
+  "name": "typescript-eslint-language-service",
+  "version": "1.0.0",
+  "description": "TypeScript language service plugin for ESLint",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Quramy/typescript-eslint-language-service.git"
+  },
+  "keywords": [
+    "TypeScript",
+    "ESLint"
+  ],
+  "author": "Quramy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Quramy/typescript-eslint-language-service/issues"
+  },
+  "homepage": "https://github.com/Quramy/typescript-eslint-language-service#readme",
+  "peerDependencies": {
+    "@typescript-eslint/parser": "^1.0.0",
+    "eslint": "^4.0.0 | ^5.0.0 | ^6.0.0",
+    "typescript": "^2.3.0 | ^3.0.0"
+  },
+  "devDependencies": {
+    "@types/eslint": "^4.16.6",
+    "@types/jest": "^24.0.15",
+    "@types/node": "^12.6.8",
+    "@typescript-eslint/parser": "^1.12.0",
+    "eslint": "^6.0.1",
+    "jest": "^24.8.0",
+    "ts-jest": "^24.0.2",
+    "typescript": "~3.5.0"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.ts$": "ts-jest"
+    },
+    "testRegex": "(src/.*\\.test)\\.ts$",
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "\\.d\\.ts$",
+      "lib/.*"
+    ],
+    "moduleFileExtensions": [
+      "js",
+      "ts",
+      "json"
+    ]
+  }
+}
