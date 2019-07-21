@@ -5,7 +5,8 @@
   "main": "lib/index.js",
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "test": "jest"
+    "test": "jest",
+    "e2e": "jest --config e2e/jest.config.json"
   },
   "repository": {
     "type": "git",
