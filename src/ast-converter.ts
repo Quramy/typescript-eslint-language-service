@@ -134,14 +134,15 @@ function applyParserOptionsToExtra(extra: Extra, options: TSESTreeOptions) {
 }
 
 export type AstConverterCreateOptions = {
-  program: ts.Program,
+  getProgram: () => ts.Program,
 };
 
 export class AstConverter {
-  public program: ts.Program;
 
-  constructor({ program }: AstConverterCreateOptions) {
-    this.program = program;
+  readonly getProgram: () => ts.Program;
+
+  constructor({ getProgram }: AstConverterCreateOptions) {
+    this.getProgram = getProgram;
   }
 
   /**
@@ -172,7 +173,7 @@ export class AstConverter {
     return {
       ast: estree,
       services: {
-        program: this.program,
+        program: this.getProgram(),
         esTreeNodeToTSNodeMap: astMaps ? astMaps.esTreeNodeToTSNodeMap : undefined,
         tsNodeToESTreeNodeMap: astMaps ? astMaps.tsNodeToESTreeNodeMap : undefined,
       },

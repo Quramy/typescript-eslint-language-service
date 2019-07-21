@@ -13,7 +13,7 @@ function createProgram() {
 describe("AstConverter", () => {
   describe("#convertToESLintSourceCode", () => {
     it("should create ESLint SourceCode insntance from TypeScript sourcefile", () => {
-      const astConverter = new AstConverter({ program: createProgram() });
+      const astConverter = new AstConverter({ getProgram: () => createProgram() });
       const sourceFile = ts.createSourceFile("test.ts", `const a = 1`, ts.ScriptTarget.ESNext, true, ts.ScriptKind.TS);
       const actual = astConverter.convertToESLintSourceCode(sourceFile, { });
       expect(actual).toBeInstanceOf(SourceCode);
