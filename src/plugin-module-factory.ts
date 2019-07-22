@@ -4,7 +4,7 @@ import { ESLintAdapter } from "./eslint-adapter";
 import { AstConverter } from "./ast-converter";
 
 function create(info: ts.server.PluginCreateInfo): ts.LanguageService {
-  const logger = (msg: string) => info.project.projectService.logger.info(`[typescript-eslint-langage-service] ${msg}`);
+  const logger = (msg: string) => info.project.projectService.logger.info(`[typescript-eslint-language-service] ${msg}`);
   logger("config: " + JSON.stringify(info.config));
 
   const { languageServiceHost, languageService } = info;
