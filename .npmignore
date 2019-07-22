@@ -1,3 +1,4 @@
 src/
 .circleci/
 .e2e/
+test-fixtures/

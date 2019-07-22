@@ -1,7 +1,8 @@
 import * as ts from "typescript";
-import { Linter, CLIEngine } from "eslint";
+import { Linter } from "eslint";
 import { AstConverter } from "./ast-converter";
 import { InvalidParserError } from "./errors";
+import { ESLintConfigProvider } from "./eslint-config-provider";
 
 // TODO refactor global const
 export const TS_LANGSERVICE_ESLINT_DIAGNOSTIC_ERROR_CODE = 30010;
@@ -40,70 +41,27 @@ export type ESLintAdapterOptions = {
   logger: (msg: string) => void,
   getSourceFile: (fileName: string) => ts.SourceFile | undefined,
   converter: AstConverter,
+  configProvider: ESLintConfigProvider,
 };
 
 export class ESLintAdapter {
-  readonly cliEngine: CLIEngine;
-  readonly loadedPlugins: string[];
   linter: Linter;
   logger: (msg: string) => void;
   converter: AstConverter;
+  configProvider: ESLintConfigProvider;
   getSourceFile: (fileName: string) => ts.SourceFile | undefined;
 
   constructor({
     logger,
     converter,
+    configProvider,
     getSourceFile,
   }: ESLintAdapterOptions) {
-    this.loadedPlugins = [];
-    this.cliEngine = new CLIEngine({
-      useEslintrc: true,
-    });
     this.linter = new Linter();
     this.logger = logger;
     this.converter = converter;
+    this.configProvider = configProvider;
     this.getSourceFile = getSourceFile;
-  }
-
-  getLinterConfig(fileName: string): Linter.Config {
-    const config = this.cliEngine.getConfigForFile(fileName);
-    if (!config.parser || !/@typescript-eslint\/parser/.test(config.parser)) {
-      throw new InvalidParserError();
-    }
-    return config;
-  }
-
-  loadPlugins(plugins?: string[]) {
-    if (!plugins) return;
-    const pluginNamesToBeLoaded = plugins.filter(name => this.loadedPlugins.every(p => p !== name));
-    if (!pluginNamesToBeLoaded.length) return;
-    const dummy = new CLIEngine({ plugins: pluginNamesToBeLoaded });
-    let i = 0;
-    let j = 0;
-    const definedRuleKeys = [...this.linter.getRules().keys()].sort();
-    const loadedRuleKeys = [...dummy.getRules().keys()].sort();
-    const ruleNameToBeLoaded = [];
-    while(j < loadedRuleKeys.length) {
-      const d = definedRuleKeys[i];
-      if (loadedRuleKeys[j] === d) {
-        i++;
-        j++;
-      } else {
-        ruleNameToBeLoaded.push(loadedRuleKeys[j]);
-        j++;
-      }
-    }
-    const ruleMap = dummy.getRules();
-    ruleNameToBeLoaded.forEach(key => {
-      const rule = ruleMap.get(key);
-      if (!rule) return;
-      this.linter.defineRule(key, rule);
-    });
-
-    pluginNamesToBeLoaded.forEach(name => {
-      this.logger(`eslint plugin was loaded ${name}`);
-      this.loadedPlugins.push(name);
-    });
   }
 
   getSemanticDiagnostics(delegate: ts.LanguageService["getSemanticDiagnostics"], fileName: string): ReturnType<ts.LanguageService["getSemanticDiagnostics"]> {
@@ -113,17 +71,17 @@ export class ESLintAdapter {
       if (!sourceFile) {
         return original;
       }
-      const config = this.getLinterConfig(fileName);
-      this.loadPlugins((config as { plugins?: string[] }).plugins);
-      const parserOptions = config.parserOptions ? config.parserOptions : { };
+      const configArray = this.configProvider.getConfigArrayForFile(fileName);
+      const configFileContent = configArray.extractConfig(fileName).toCompatibleObjectAsConfigFileContent();
+      if (!configFileContent.parser || !/@typescript-eslint\/parser/.test(configFileContent.parser)) {
+        throw new InvalidParserError();
+      }
+      const parserOptions = configFileContent.parserOptions ? configFileContent.parserOptions : { };
       const sourceCode = this.converter.convertToESLintSourceCode(sourceFile, parserOptions);
-      const { env, rules, globals, settings } = config;
-      const eslintResult = this.linter.verify(sourceCode, {
-        env,
-        rules,
-        globals,
-        settings,
-      }, { filename: fileName });
+
+      // See https://github.com/eslint/eslint/blob/v6.1.0/lib/linter/linter.js#L1130
+      const eslintResult = this.linter.verify(sourceCode, configArray as any, { filename: fileName });
+
       return [...original, ...translateESLintResult(eslintResult, sourceFile)];
     } catch (error) {
       this.logger(error.message ? error.message : "unknow error");

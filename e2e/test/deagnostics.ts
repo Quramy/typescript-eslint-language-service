@@ -59,6 +59,8 @@ describe("LanguageService plugin", () => {
       expect(semanticDiag.body!.file).toBe(file);
       const diagnostic = semanticDiag.body!.diagnostics[0];
       expect(diagnostic.text).toMatch(/@typescript-eslint\/no-unused-vars/);
+      expect(diagnostic.start.line).toBe(2);
+      expect(diagnostic.start.offset).toBe(9);
       await server.close();
     });
   });
