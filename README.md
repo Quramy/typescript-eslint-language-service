@@ -52,7 +52,7 @@ It's ready to go. Launch your TypeScript IDE.
 ```ts
 type PluginOptions = {
   name: "typescript-eslint-language-service",
-  watchDirs: string[];
+  watchDirs?: string[];
 };
 ```
 
