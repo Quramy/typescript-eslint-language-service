@@ -1,0 +1,7 @@
+module.exports = {
+  root: true,
+  rules: {
+    curly: "error",
+    // TO_BE_ENABLED_AFTER semi: "error",
+  },
+};

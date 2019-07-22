@@ -1,13 +1,26 @@
+import path from "path";
 import * as ts from "typescript/lib/tsserverlibrary";
 import { LanguageServiceProxyBuilder } from "./language-service-proxy-builder";
 import { ESLintAdapter } from "./eslint-adapter";
 import { AstConverter } from "./ast-converter";
+import { ESLintConfigProvider } from "./eslint-config-provider";
 
 function create(info: ts.server.PluginCreateInfo): ts.LanguageService {
-  const logger = (msg: string) => info.project.projectService.logger.info(`[typescript-eslint-language-service] ${msg}`);
-  logger("config: " + JSON.stringify(info.config));
+  const { languageService, serverHost, project } = info;
 
-  const { languageServiceHost, languageService } = info;
+  const projectDir = path.dirname(project.getProjectName());
+  const logger = (msg: string) => project.projectService.logger.info(`[typescript-eslint-language-service] ${msg}`);
+
+  const pluginConfigObj = info.config;
+
+  logger("config: " + pluginConfigObj);
+
+  let watchDirs: string[];
+  if (Array.isArray(pluginConfigObj.watchDirs)) {
+    watchDirs = (pluginConfigObj.watchDirs as any[]).filter(x => typeof x === "string").map(x => path.resolve(projectDir, x));
+  } else {
+    watchDirs = [projectDir];
+  }
 
   const getProgram = () => {
     const program = languageService.getProgram();
@@ -21,9 +34,15 @@ function create(info: ts.server.PluginCreateInfo): ts.LanguageService {
     getProgram,
   });
 
+  const configProvider = new ESLintConfigProvider({
+    directoriesToWatch: watchDirs,
+    host: serverHost,
+  });
+
   const adapter = new ESLintAdapter({
     logger,
     converter,
+    configProvider,
     getSourceFile(fileName: string) {
       return getProgram().getSourceFile(fileName);
     },

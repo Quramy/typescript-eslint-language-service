@@ -23,7 +23,7 @@ class TSServer {
     this._responseCommandEmitter = new EventEmitter();
     const tsserverPath = require.resolve(path.join(projectPath, "node_modules/typescript/lib/tsserver"));
     const server = fork(tsserverPath, [], {
-      // cwd: path.join(__dirname, "../projects"),
+      cwd: projectPath,
       stdio: ["pipe", "pipe", "pipe", "ipc"],
     });
     this._exitPromise = new Promise((resolve, reject) => {
