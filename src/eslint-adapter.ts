@@ -118,7 +118,6 @@ export class ESLintAdapter {
       const parserOptions = config.parserOptions ? config.parserOptions : { };
       const sourceCode = this.converter.convertToESLintSourceCode(sourceFile, parserOptions);
       const { env, rules, globals, settings } = config;
-      this.logger(JSON.stringify(rules));
       const eslintResult = this.linter.verify(sourceCode, {
         env,
         rules,
