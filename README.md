@@ -47,5 +47,18 @@ And configure `plugins` section in your tsconfig.json, for example:
 
 It's ready to go. Launch your TypeScript IDE.
 
+### Plugin options
+
+```ts
+type PluginOptions = {
+  name: "typescript-eslint-language-service",
+  watchDirs: string[];
+};
+```
+
+#### `watchDirs`
+
+By default, this plugins watches only `.eslintrc.*` files that exist in your project root directory. If you want to watch other directories, add their names.
+
 ## LICENSE
 MIT
