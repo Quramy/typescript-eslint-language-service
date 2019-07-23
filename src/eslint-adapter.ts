@@ -45,13 +45,13 @@ export type ESLintAdapterOptions = {
 };
 
 export class ESLintAdapter {
-  linter: Linter;
-  logger: (msg: string) => void;
-  converter: AstConverter;
-  configProvider: ESLintConfigProvider;
-  getSourceFile: (fileName: string) => ts.SourceFile | undefined;
+  private linter: Linter;
+  private logger: (msg: string) => void;
+  private converter: AstConverter;
+  private configProvider: ESLintConfigProvider;
+  private getSourceFile: (fileName: string) => ts.SourceFile | undefined;
 
-  constructor({
+  public constructor({
     logger,
     converter,
     configProvider,
@@ -64,7 +64,7 @@ export class ESLintAdapter {
     this.getSourceFile = getSourceFile;
   }
 
-  getSemanticDiagnostics(delegate: ts.LanguageService["getSemanticDiagnostics"], fileName: string): ReturnType<ts.LanguageService["getSemanticDiagnostics"]> {
+  public getSemanticDiagnostics(delegate: ts.LanguageService["getSemanticDiagnostics"], fileName: string): ReturnType<ts.LanguageService["getSemanticDiagnostics"]> {
     const original = delegate(fileName);
     try {
       const sourceFile = this.getSourceFile(fileName);

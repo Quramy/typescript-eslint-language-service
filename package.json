@@ -4,10 +4,13 @@
   "description": "TypeScript language service plugin for ESLint",
   "main": "lib/index.js",
   "scripts": {
+    "clean": "rimraf local lib",
     "build": "tsc -p tsconfig.build.json",
+    "build:local": "tsc -p tsconfig.build.json --outDir local",
+    "postinstall": "npm run build:local",
+    "lint": "eslint \"src/**/*\" \"e2e/test/**/*\" \"e2e/helper/*\"",
     "test": "jest",
-    "e2e": "jest --config e2e/jest.config.json",
-    "prepare": "rimraf lib && npm run build"
+    "e2e": "jest --config e2e/jest.config.json"
   },
   "repository": {
     "type": "git",

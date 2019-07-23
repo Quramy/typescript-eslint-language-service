@@ -1,5 +1,5 @@
 export class InvalidParserError extends Error {
-  constructor() {
+  public constructor() {
     super("use '@typescript-eslint/parse'");
   }
 }

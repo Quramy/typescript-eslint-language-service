@@ -26,7 +26,7 @@ export class ESLintConfigProvider {
   private readonly host: ConfigProviderHost;
   private factory: CascadingConfigArrayFactory;
 
-  constructor({ host, directoriesToWatch }: ESLintConfigProviderOptions) {
+  public constructor({ host, directoriesToWatch }: ESLintConfigProviderOptions) {
 
     this.host = host;
     this.factory = new CascadingConfigArrayFactory();
@@ -38,11 +38,11 @@ export class ESLintConfigProvider {
     });
   }
 
-  getConfigArrayForFile(fileName: string) {
+  public getConfigArrayForFile(fileName: string) {
     return this.factory.getConfigArrayForFile(fileName);
   }
 
-  getConfigForFile(fileName: string) {
+  public getConfigForFile(fileName: string) {
     return this.factory.getConfigArrayForFile(fileName).extractConfig(fileName);
   }
 }
