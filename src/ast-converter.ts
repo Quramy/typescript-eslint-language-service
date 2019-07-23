@@ -232,7 +232,7 @@ export class AstConverter {
         ast: ast as AST.Program,
         scopeManager: scopeManager as Scope.ScopeManager,
         services,
-        visitorKeys,
+        visitorKeys: visitorKeys as SourceCode.VisitorKeys,
       };
     } catch (error) {
       throw new Error();
@@ -242,12 +242,14 @@ export class AstConverter {
   convertToESLintSourceCode(src: ts.SourceFile, options?: ParserOptions | null) {
 
     const code = src.getFullText();
-    const { ast, scopeManager } = this.parseForESLint(src, options);
+    const { ast, scopeManager, services, visitorKeys } = this.parseForESLint(src, options);
 
     return new SourceCode({
       text: code,
       ast,
       scopeManager,
+      parserServices: services,
+      visitorKeys,
     });
   }
 }

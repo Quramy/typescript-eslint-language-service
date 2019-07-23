@@ -79,7 +79,7 @@ describe("LanguageService plugin", () => {
       }
       const semanticDiag = found as ts.server.protocol.DiagnosticEvent;
       expect(semanticDiag.body!.file).toBe(file);
-      expect(semanticDiag.body!.diagnostics.length).toBe(0);
+      expect(semanticDiag.body!.diagnostics).toEqual([]);
     });
   });
 });
