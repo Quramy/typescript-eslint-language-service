@@ -1,5 +1,5 @@
 import path from "path";
-import * as ts from "typescript";
+import ts from "typescript";
 import { CascadingConfigArrayFactory } from "eslint/lib/cli-engine/cascading-config-array-factory";
 
 export type ConfigProviderHost = {
@@ -24,7 +24,7 @@ const ESLINTRC_SUFFIX_LIST = [
 export class ESLintConfigProvider {
 
   private readonly host: ConfigProviderHost;
-  private factory: CascadingConfigArrayFactory;
+  private readonly factory: CascadingConfigArrayFactory;
 
   public constructor({ host, directoriesToWatch }: ESLintConfigProviderOptions) {
 

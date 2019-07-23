@@ -1,12 +1,12 @@
-import * as ts from "typescript/lib/tsserverlibrary";
+import ts from "typescript/lib/tsserverlibrary";
 
 export type LanguageServiceMethodWrapper<K extends keyof ts.LanguageService>
   = (delegate: ts.LanguageService[K], info?: ts.server.PluginCreateInfo) => ts.LanguageService[K];
 
 export class LanguageServiceProxyBuilder {
 
-  private wrappers: any[] = [];
-  private info: ts.server.PluginCreateInfo;
+  private readonly wrappers: any[] = [];
+  private readonly info: ts.server.PluginCreateInfo;
 
   public constructor(info: ts.server.PluginCreateInfo) {
     this.info = info;

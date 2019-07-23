@@ -1,7 +1,7 @@
 import path from "path";
 import assert from "assert";
+import ts from "typescript/lib/tsserverlibrary";
 import { createServer, TSServer } from "../helper/server";
-import * as ts from "typescript/lib/tsserverlibrary";
 
 function findResponse(responses: any[], eventName: string) {
   return responses.find(response => response.event === eventName);
@@ -14,7 +14,7 @@ describe("LanguageService plugin", () => {
     if (server) await server.close();
   });
   describe("#getSemanticDiagnostics", () => {
-    it("should not return ESLint error when the project use @typescript-eslint/parser", async () => {
+    it("should not return ESLint error when the project does not use @typescript-eslint/parser", async () => {
       server = createServer({ projectPath: path.resolve(__dirname, "../projects/other-parser") });
       const { file, fileContent } = server.readFile("./main.ts");
       server.send({ command: "open", arguments: { file, fileContent, scriptKindName: "TS" } });
@@ -27,10 +27,10 @@ describe("LanguageService plugin", () => {
       }
       const semanticDiag = found as ts.server.protocol.DiagnosticEvent;
       expect(semanticDiag.body!.file).toBe(file);
-      expect(semanticDiag.body!.diagnostics.length).toBe(0);
+      expect(semanticDiag.body!.diagnostics).toEqual([]);
     });
 
-    it("should return ESLint error when the project use @typescript-eslint/parser", async () => {
+    it("should return ESLint error when the project uses @typescript-eslint/parser", async () => {
       server = createServer({ projectPath: path.resolve(__dirname, "../projects/simple") });
       const { file, fileContent } = server.readFile("./main.ts");
       server.send({ command: "open", arguments: { file, fileContent, scriptKindName: "TS" } });
@@ -47,7 +47,7 @@ describe("LanguageService plugin", () => {
       expect(diagnostic.text).toMatch(/Missing semicolon./);
     });
 
-    it("should return ESLint error when the project configured with ESLint plugins", async () => {
+    it("should return ESLint error when the project is configured with ESLint plugins", async () => {
       server = createServer({ projectPath: path.resolve(__dirname, "../projects/ts-eslint-plugin") });
       const { file, fileContent } = server.readFile("./main.ts");
       server.send({ command: "open", arguments: { file, fileContent, scriptKindName: "TS" } });

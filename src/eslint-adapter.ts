@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import ts from "typescript";
 import { Linter } from "eslint";
 import { AstConverter } from "./ast-converter";
 import { InvalidParserError } from "./errors";
@@ -45,11 +45,11 @@ export type ESLintAdapterOptions = {
 };
 
 export class ESLintAdapter {
-  private linter: Linter;
-  private logger: (msg: string) => void;
-  private converter: AstConverter;
-  private configProvider: ESLintConfigProvider;
-  private getSourceFile: (fileName: string) => ts.SourceFile | undefined;
+  private readonly linter: Linter;
+  private readonly logger: (msg: string) => void;
+  private readonly converter: AstConverter;
+  private readonly configProvider: ESLintConfigProvider;
+  private readonly getSourceFile: (fileName: string) => ts.SourceFile | undefined;
 
   public constructor({
     logger,

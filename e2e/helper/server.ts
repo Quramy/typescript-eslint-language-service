@@ -9,14 +9,16 @@ export type Options = {
 
 export class TSServer {
 
-  private _projectPath: string;
-  private _responseEventEmitter: EventEmitter;
-  private _responseCommandEmitter: EventEmitter;
+  private readonly _projectPath: string;
+  private readonly _responseEventEmitter: EventEmitter;
+  private readonly _responseCommandEmitter: EventEmitter;
   private _exitPromise: Promise<number | null>;
   private _isClosed = false;
   private _server: ChildProcess;
   private _seq = 0;
+
   public responses: any[] = [];
+
   public constructor({ projectPath }: Options) {
     this._projectPath = projectPath;
     this._responseEventEmitter = new EventEmitter();
@@ -55,7 +57,7 @@ export class TSServer {
 
   public send(command: any) {
     const seq = ++this._seq;
-    const req = JSON.stringify(Object.assign({ seq: seq, type: "request" }, command)) + "\n";
+    const req = JSON.stringify(Object.assign({ seq, type: "request" }, command)) + "\n";
     this._server.stdin!.write(req);
   }
 

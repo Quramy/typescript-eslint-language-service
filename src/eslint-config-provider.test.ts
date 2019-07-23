@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import * as ts from "typescript";
+import ts from "typescript";
 import { ESLintConfigProvider } from "./eslint-config-provider";
 
 const fixtureDirPath = path.resolve(__dirname, "../test-fixtures/eslnt-config-provider");

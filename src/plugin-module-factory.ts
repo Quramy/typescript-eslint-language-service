@@ -1,5 +1,5 @@
 import path from "path";
-import * as ts from "typescript/lib/tsserverlibrary";
+import ts from "typescript/lib/tsserverlibrary";
 import { LanguageServiceProxyBuilder } from "./language-service-proxy-builder";
 import { ESLintAdapter } from "./eslint-adapter";
 import { AstConverter } from "./ast-converter";

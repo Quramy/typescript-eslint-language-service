@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import ts from "typescript";
 import { AstConverter } from "./ast-converter";
 import { SourceCode } from "eslint";
 import { visitorKeys as tsEslintVisitorKeys } from "@typescript-eslint/parser/dist/visitor-keys";

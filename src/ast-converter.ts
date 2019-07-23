@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import ts from "typescript";
 import { ParserOptions } from "@typescript-eslint/parser";
 import { SourceCode, AST, Scope } from "eslint";
 import { Extra } from "@typescript-eslint/typescript-estree/dist/parser-options";
