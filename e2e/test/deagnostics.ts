@@ -48,7 +48,7 @@ describe("LanguageService plugin", () => {
     });
 
     it("should return ESLint error when the project configured with ESLint plugins", async () => {
-      server = createServer({ projectPath: path.resolve(__dirname, "../projects/ts-recommended") });
+      server = createServer({ projectPath: path.resolve(__dirname, "../projects/ts-eslint-plugin") });
       const { file, fileContent } = server.readFile("./main.ts");
       server.send({ command: "open", arguments: { file, fileContent, scriptKindName: "TS" } });
       await server.waitEvent("projectLoadingFinish");
@@ -67,8 +67,8 @@ describe("LanguageService plugin", () => {
     });
 
     it("should not reproduce issue #6", async () => {
-      server = createServer({ projectPath: path.resolve(__dirname, "../projects/ts-recommended") });
-      const { file, fileContent } = server.readFile("./reproduce_issue_6/main.ts");
+      server = createServer({ projectPath: path.resolve(__dirname, "../projects/ts-eslint-plugin") });
+      const { file, fileContent } = server.readFile("./reproduce_issue_7/main.ts");
       server.send({ command: "open", arguments: { file, fileContent, scriptKindName: "TS" } });
       await server.waitEvent("projectLoadingFinish");
       server.send({ command: "geterr", arguments: { files: [file], delay: 0 } });
