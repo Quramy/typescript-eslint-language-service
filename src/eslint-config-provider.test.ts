@@ -8,7 +8,7 @@ const fixtureDirPath = path.resolve(__dirname, "../test-fixtures/eslnt-config-pr
 class FileUpdater {
   path!: string;
   originalContent?: string;
-  callbackList: { path: string, callback: ts.FileWatcherCallback }[] = [];
+  callbackList: { path: string; callback: ts.FileWatcherCallback }[] = [];
   constructor() {
   }
 

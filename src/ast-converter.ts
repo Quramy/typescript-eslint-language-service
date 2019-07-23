@@ -134,7 +134,7 @@ function applyParserOptionsToExtra(extra: Extra, options: TSESTreeOptions) {
 }
 
 export type AstConverterCreateOptions = {
-  getProgram: () => ts.Program,
+  getProgram: () => ts.Program;
 };
 
 export class AstConverter {
@@ -218,9 +218,9 @@ export class AstConverter {
             // Function#body cannot be null in ESTree spec.
             case 'FunctionExpression':
               if (!node.body) {
-              node.type = `TSEmptyBody${node.type}` as any;
-            }
-            break;
+                node.type = `TSEmptyBody${node.type}` as any;
+              }
+              break;
             // no default
           }
         },

@@ -13,8 +13,8 @@ export function translateESLintResult(result: Linter.LintMessage[], sourceFile: 
 
     const category: ts.DiagnosticCategory = 
       severity === 2 ? ts.DiagnosticCategory.Error :
-      severity === 1 ? ts.DiagnosticCategory.Warning :
-      ts.DiagnosticCategory.Suggestion;
+        severity === 1 ? ts.DiagnosticCategory.Warning :
+          ts.DiagnosticCategory.Suggestion;
 
     /**
      * ESLint uses 1-started index. On the other hand, TypeScript 0-started index.
@@ -38,10 +38,10 @@ export function translateESLintResult(result: Linter.LintMessage[], sourceFile: 
 }
 
 export type ESLintAdapterOptions = {
-  logger: (msg: string) => void,
-  getSourceFile: (fileName: string) => ts.SourceFile | undefined,
-  converter: AstConverter,
-  configProvider: ESLintConfigProvider,
+  logger: (msg: string) => void;
+  getSourceFile: (fileName: string) => ts.SourceFile | undefined;
+  converter: AstConverter;
+  configProvider: ESLintConfigProvider;
 };
 
 export class ESLintAdapter {
