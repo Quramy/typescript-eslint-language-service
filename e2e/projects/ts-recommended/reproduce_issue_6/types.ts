@@ -1,3 +1,1 @@
-export type Hoge = {
-  foo: string;
-}
+export type Hoge = { };

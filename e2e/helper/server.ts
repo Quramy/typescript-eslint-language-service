@@ -7,7 +7,7 @@ export type Options = {
   projectPath: string;
 };
 
-class TSServer {
+export class TSServer {
 
   private _projectPath: string;
   private _responseEventEmitter: EventEmitter;
