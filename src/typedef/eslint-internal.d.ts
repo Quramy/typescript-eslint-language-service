@@ -8,6 +8,7 @@ declare module "eslint/lib/cli-engine/cascading-config-array-factory" {
   import { Linter } from "eslint";
 
   export interface InternalConfig extends Linter.Config {
+    plugins: any;
   }
 
   export interface ExtractedConfig extends Linter.Config {
@@ -24,8 +25,8 @@ declare module "eslint/lib/cli-engine/cascading-config-array-factory" {
    *
    */
   export class CascadingConfigArrayFactory {
-    getConfigArrayForFile(filename: string): ConfigArray<InternalConfig>;
-    clearCache(): void;
+    public getConfigArrayForFile(filename: string): ConfigArray<InternalConfig>;
+    public clearCache(): void;
   }
 
 }

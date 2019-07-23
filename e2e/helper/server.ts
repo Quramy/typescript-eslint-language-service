@@ -16,8 +16,8 @@ export class TSServer {
   private _isClosed = false;
   private _server: ChildProcess;
   private _seq = 0;
-  responses: any[] = [];
-  constructor({ projectPath }: Options) {
+  public responses: any[] = [];
+  public constructor({ projectPath }: Options) {
     this._projectPath = projectPath;
     this._responseEventEmitter = new EventEmitter();
     this._responseCommandEmitter = new EventEmitter();
@@ -47,19 +47,19 @@ export class TSServer {
     this.responses = [];
   }
 
-  readFile(filepath: string) {
+  public readFile(filepath: string) {
     const file = path.resolve(this._projectPath, filepath);
     const fileContent = fs.readFileSync(file, "utf8");
     return { file, fileContent };
   }
 
-  send(command: any) {
+  public send(command: any) {
     const seq = ++this._seq;
     const req = JSON.stringify(Object.assign({ seq: seq, type: "request" }, command)) + "\n";
     this._server.stdin!.write(req);
   }
 
-  close() {
+  public close() {
     if (!this._isClosed) {
       this._isClosed = true;
       this._server.stdin!.end();
@@ -67,15 +67,15 @@ export class TSServer {
     return this._exitPromise;
   }
 
-  wait(time = 0) {
+  public wait(time = 0) {
     return new Promise(res => setTimeout(() => res(), time));
   }
 
-  waitEvent(eventName: string) {
+  public waitEvent(eventName: string) {
     return new Promise(res => this._responseEventEmitter.once(eventName, () => res()));
   }
 
-  waitResponse(commandName: string) {
+  public waitResponse(commandName: string) {
     return new Promise(res => this._responseCommandEmitter.once(commandName, () => res()));
   }
 }

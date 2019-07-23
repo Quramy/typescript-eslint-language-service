@@ -9,14 +9,14 @@ import { ParseAndGenerateServicesResult, TSESTreeOptions } from "@typescript-esl
 import convert from "@typescript-eslint/typescript-estree/dist/ast-converter";
 
 function validateBoolean(value: boolean | undefined, fallback: boolean = false): boolean {
-  if (typeof value !== 'boolean') {
+  if (typeof value !== "boolean") {
     return fallback;
   }
   return value;
 }
 
 function createExtra(code: string) {
-  const base = {
+  const base: Extra = {
     tokens: null,
     range: false,
     loc: false,
@@ -33,7 +33,7 @@ function createExtra(code: string) {
     tsconfigRootDir: process.cwd(),
     extraFileExtensions: [],
     preserveNodeMaps: undefined,
-  } as Extra;
+  };
   return {
     ...base,
     code,
@@ -41,7 +41,7 @@ function createExtra(code: string) {
     loc: true,
     comment: true,
     comments: [],
-  } as Extra;
+  };
 }
 
 function applyParserOptionsToExtra(extra: Extra, options: TSESTreeOptions) {
@@ -134,14 +134,14 @@ function applyParserOptionsToExtra(extra: Extra, options: TSESTreeOptions) {
 }
 
 export type AstConverterCreateOptions = {
-  getProgram: () => ts.Program,
+  getProgram: () => ts.Program;
 };
 
 export class AstConverter {
 
-  readonly getProgram: () => ts.Program;
+  private readonly getProgram: () => ts.Program;
 
-  constructor({ getProgram }: AstConverterCreateOptions) {
+  public constructor({ getProgram }: AstConverterCreateOptions) {
     this.getProgram = getProgram;
   }
 
@@ -150,7 +150,7 @@ export class AstConverter {
    * see also https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/typescript-estree/src/parser.ts#L346
    *
    */
-  parseAndGenerateServices(src: ts.SourceFile, options: TSESTreeOptions) {
+  public parseAndGenerateServices(src: ts.SourceFile, options: TSESTreeOptions) {
     const code = src.getFullText();
     let extra: Extra = createExtra(code);
 
@@ -170,20 +170,21 @@ export class AstConverter {
     /**
      * Return the converted AST and additional parser services
      */
-    return {
+    const ret: ParseAndGenerateServicesResult<any> = {
       ast: estree,
       services: {
         program: this.getProgram(),
         esTreeNodeToTSNodeMap: astMaps ? astMaps.esTreeNodeToTSNodeMap : undefined,
         tsNodeToESTreeNodeMap: astMaps ? astMaps.tsNodeToESTreeNodeMap : undefined,
       },
-    } as ParseAndGenerateServicesResult<any>;
+    };
+    return ret;
   }
 
   /**
    * See also https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/parser/src/parser.ts
    */
-  parseForESLint(src: ts.SourceFile, options?: ParserOptions | null) {
+  public parseForESLint(src: ts.SourceFile, options?: ParserOptions | null) {
     try {
       
       if (!options || typeof options !== "object") {
@@ -216,11 +217,11 @@ export class AstConverter {
         enter(node) {
           switch (node.type) {
             // Function#body cannot be null in ESTree spec.
-            case 'FunctionExpression':
+            case "FunctionExpression":
               if (!node.body) {
-              node.type = `TSEmptyBody${node.type}` as any;
-            }
-            break;
+                node.type = `TSEmptyBody${node.type}` as any;
+              }
+              break;
             // no default
           }
         },
@@ -239,7 +240,7 @@ export class AstConverter {
     }
   }
 
-  convertToESLintSourceCode(src: ts.SourceFile, options?: ParserOptions | null) {
+  public convertToESLintSourceCode(src: ts.SourceFile, options?: ParserOptions | null) {
 
     const code = src.getFullText();
     const { ast, scopeManager, services, visitorKeys } = this.parseForESLint(src, options);

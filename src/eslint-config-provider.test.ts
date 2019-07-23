@@ -5,20 +5,24 @@ import { ESLintConfigProvider } from "./eslint-config-provider";
 
 const fixtureDirPath = path.resolve(__dirname, "../test-fixtures/eslnt-config-provider");
 
+function readFile(path: string, encoding: string) {
+  return fs.readFileSync(path, { encoding });
+};
+
 class FileUpdater {
-  path!: string;
-  originalContent?: string;
-  callbackList: { path: string, callback: ts.FileWatcherCallback }[] = [];
-  constructor() {
+  public path!: string;
+  public originalContent?: string;
+  public callbackList: { path: string; callback: ts.FileWatcherCallback }[] = [];
+  public constructor() {
   }
 
-  init(path: string) {
+  public init(path: string) {
     this.path = path;
     this.callbackList = [];
     this.originalContent = readFile(path, "utf8");
   }
 
-  update(replace: (old: string) => string) {
+  public update(replace: (old: string) => string) {
     if (this.originalContent) {
       const newContent = replace(this.originalContent);
       fs.writeFileSync(this.path, newContent, "utf8");
@@ -28,7 +32,7 @@ class FileUpdater {
     }
   }
 
-  reset() {
+  public reset() {
     if (this.originalContent) {
       fs.writeFileSync(this.path, this.originalContent, "utf8");
       delete this.originalContent;
@@ -37,7 +41,7 @@ class FileUpdater {
     this.callbackList = [];
   }
 
-  createWatcher() {
+  public createWatcher() {
     return {
       watchFile: (path: string, callback: ts.FileWatcherCallback) => {
         this.callbackList.push({ path, callback });
@@ -106,7 +110,3 @@ describe("ESLintConfigProvider", () => {
   });
 
 });
-
-function readFile(path: string, encoding: string) {
-  return fs.readFileSync(path, { encoding });
-};

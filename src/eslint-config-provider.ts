@@ -3,13 +3,13 @@ import * as ts from "typescript";
 import { CascadingConfigArrayFactory } from "eslint/lib/cli-engine/cascading-config-array-factory";
 
 export type ConfigProviderHost = {
-  readonly readFile: (fileName: string, encoding: string) => string | undefined,
-  readonly watchFile: (path: string, callback: ts.FileWatcherCallback, pollingInterval?: number) => ts.FileWatcher,
+  readonly readFile: (fileName: string, encoding: string) => string | undefined;
+  readonly watchFile: (path: string, callback: ts.FileWatcherCallback, pollingInterval?: number) => ts.FileWatcher;
 };
 
 export type ESLintConfigProviderOptions = {
-  host: ConfigProviderHost,
-  directoriesToWatch: string[],
+  host: ConfigProviderHost;
+  directoriesToWatch: string[];
 };
 
 const ESLINTRC_SUFFIX_LIST = [
@@ -26,7 +26,7 @@ export class ESLintConfigProvider {
   private readonly host: ConfigProviderHost;
   private factory: CascadingConfigArrayFactory;
 
-  constructor({ host, directoriesToWatch }: ESLintConfigProviderOptions) {
+  public constructor({ host, directoriesToWatch }: ESLintConfigProviderOptions) {
 
     this.host = host;
     this.factory = new CascadingConfigArrayFactory();
@@ -38,11 +38,11 @@ export class ESLintConfigProvider {
     });
   }
 
-  getConfigArrayForFile(fileName: string) {
+  public getConfigArrayForFile(fileName: string) {
     return this.factory.getConfigArrayForFile(fileName);
   }
 
-  getConfigForFile(fileName: string) {
+  public getConfigForFile(fileName: string) {
     return this.factory.getConfigArrayForFile(fileName).extractConfig(fileName);
   }
 }
