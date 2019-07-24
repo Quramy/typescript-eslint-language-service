@@ -66,7 +66,7 @@ describe("LanguageService plugin", () => {
       expect(diagnostic.start.offset).toBe(9);
     });
 
-    it("should not reproduce issue #6", async () => {
+    it("should not reproduce issue #7", async () => {
       server = createServer({ projectPath: path.resolve(__dirname, "../projects/ts-eslint-plugin") });
       const { file, fileContent } = server.readFile("./reproduce_issue_7/main.ts");
       server.send({ command: "open", arguments: { file, fileContent, scriptKindName: "TS" } });
