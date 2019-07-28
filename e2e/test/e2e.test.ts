@@ -95,7 +95,7 @@ describe("LanguageService plugin", () => {
   });
 
   describe("#getCodeFixes", () => {
-    it("should not return ESLint error when the project does not use @typescript-eslint/parser", async () => {
+    it("should return codeFixes reported by ESLint rules", async () => {
       server = createServer({ projectPath: path.resolve(__dirname, "../projects/simple") });
       const { file, fileContent } = server.readFile("./main.ts");
       server.send({ command: "open", arguments: { file, fileContent, scriptKindName: "TS" } });
