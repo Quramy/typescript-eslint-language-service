@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ESLintAdapter #getSemanticDiagnostics shuld return ESLint verification result as TypeScript diagnostic format 1`] = `
+Array [
+  Object {
+    "category": 1,
+    "code": 30010,
+    "length": 0,
+    "messageText": "[semi] Missing semicolon.",
+    "start": 11,
+  },
+]
+`;

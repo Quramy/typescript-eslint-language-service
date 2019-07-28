@@ -25,7 +25,7 @@ function createExtra(code: string) {
     strict: false,
     jsx: false,
     useJSXTextNode: false,
-    log: console.log,
+    log: () => { },
     projects: [],
     errorOnUnknownASTType: false,
     errorOnTypeScriptSyntacticAndSemanticIssues: false,
@@ -134,14 +134,14 @@ function applyParserOptionsToExtra(extra: Extra, options: TSESTreeOptions) {
 }
 
 export type AstConverterCreateOptions = {
-  getProgram: () => ts.Program;
+  getProgram?: () => ts.Program;
 };
 
 export class AstConverter {
 
-  private readonly getProgram: () => ts.Program;
+  private readonly getProgram?: () => ts.Program;
 
-  public constructor({ getProgram }: AstConverterCreateOptions) {
+  public constructor({ getProgram }: AstConverterCreateOptions = { }) {
     this.getProgram = getProgram;
   }
 
@@ -173,7 +173,7 @@ export class AstConverter {
     const ret: ParseAndGenerateServicesResult<any> = {
       ast: estree,
       services: {
-        program: this.getProgram(),
+        program: this.getProgram && this.getProgram(),
         esTreeNodeToTSNodeMap: astMaps ? astMaps.esTreeNodeToTSNodeMap : undefined,
         tsNodeToESTreeNodeMap: astMaps ? astMaps.tsNodeToESTreeNodeMap : undefined,
       },

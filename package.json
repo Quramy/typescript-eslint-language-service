@@ -8,7 +8,7 @@
     "build": "tsc -p tsconfig.build.json",
     "build:local": "tsc -p tsconfig.build.json --outDir local",
     "postinstall": "npm run build:local",
-    "lint": "eslint \"src/**/*\" \"e2e/test/**/*\" \"e2e/helper/*\"",
+    "lint": "eslint \"src/**/*.ts\" \"e2e/test/**/*\" \"e2e/helper/*\"",
     "test": "jest",
     "e2e": "jest --config e2e/jest.config.json"
   },

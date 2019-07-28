@@ -1,6 +1,9 @@
 import path from "path";
 import ts from "typescript";
-import { CascadingConfigArrayFactory } from "eslint/lib/cli-engine/cascading-config-array-factory";
+import { ConfigArray } from "eslint/lib/cli-engine/config-array/config-array";
+import {
+  CascadingConfigArrayFactory,
+} from "eslint/lib/cli-engine/cascading-config-array-factory";
 
 export type ConfigProviderHost = {
   readonly readFile: (fileName: string, encoding: string) => string | undefined;
@@ -21,7 +24,11 @@ const ESLINTRC_SUFFIX_LIST = [
   "package.json",
 ];
 
-export class ESLintConfigProvider {
+export interface ConfigProvider {
+  getConfigArrayForFile(fileName: string): ConfigArray;
+}
+
+export class ESLintConfigProvider implements ConfigProvider {
 
   private readonly host: ConfigProviderHost;
   private readonly factory: CascadingConfigArrayFactory;
