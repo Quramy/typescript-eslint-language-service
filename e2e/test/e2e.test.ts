@@ -3,8 +3,31 @@ import assert from "assert";
 import ts from "typescript/lib/tsserverlibrary";
 import { createServer, TSServer } from "../helper/server";
 
-function findResponse(responses: any[], eventName: string) {
+function findEventResponse(responses: any[], eventName: string) {
   return responses.find(response => response.event === eventName);
+}
+
+function findCommandResponse(responses: any[], commandName: string) {
+  return responses.find(response => response.command === commandName);
+}
+
+function maskFileNameForDiagnostics(result: ts.server.protocol.DiagnosticEvent) {
+  if (!result.body) return result;
+  result.body.file = "<file>";
+  return result;
+}
+
+function maskFileNameForCodeFixes(response: ts.server.protocol.CodeFixResponse) {
+  if (!response.body) return response;
+  response.body = response.body.map(b => {
+    b.fixName = "<fileName>";
+    b.changes = b.changes.map(c => {
+      c.fileName = "<fileName>";
+      return c;
+    });
+    return b;
+  });
+  return response;
 }
 
 describe("LanguageService plugin", () => {
@@ -21,13 +44,11 @@ describe("LanguageService plugin", () => {
       await server.waitEvent("projectLoadingFinish");
       server.send({ command: "geterr", arguments: { files: [file], delay: 0 } });
       await server.waitEvent("semanticDiag");
-      const found = findResponse(server.responses, "semanticDiag");
+      const found = findEventResponse(server.responses, "semanticDiag");
       if (!found) {
         throw new assert.AssertionError();
       }
-      const semanticDiag = found as ts.server.protocol.DiagnosticEvent;
-      expect(semanticDiag.body!.file).toBe(file);
-      expect(semanticDiag.body!.diagnostics).toEqual([]);
+      expect(maskFileNameForDiagnostics(found)).toMatchSnapshot();
     });
 
     it("should return ESLint error when the project uses @typescript-eslint/parser", async () => {
@@ -37,14 +58,11 @@ describe("LanguageService plugin", () => {
       await server.waitEvent("projectLoadingFinish");
       server.send({ command: "geterr", arguments: { files: [file], delay: 0 } });
       await server.waitEvent("semanticDiag");
-      const found = findResponse(server.responses, "semanticDiag");
+      const found = findEventResponse(server.responses, "semanticDiag");
       if (!found) {
         throw new assert.AssertionError();
       }
-      const semanticDiag = found as ts.server.protocol.DiagnosticEvent;
-      expect(semanticDiag.body!.file).toBe(file);
-      const diagnostic = semanticDiag.body!.diagnostics[0];
-      expect(diagnostic.text).toMatch(/Missing semicolon./);
+      expect(maskFileNameForDiagnostics(found)).toMatchSnapshot();
     });
 
     it("should return ESLint error when the project is configured with ESLint plugins", async () => {
@@ -54,16 +72,11 @@ describe("LanguageService plugin", () => {
       await server.waitEvent("projectLoadingFinish");
       server.send({ command: "geterr", arguments: { files: [file], delay: 0 } });
       await server.waitEvent("semanticDiag");
-      const found = findResponse(server.responses, "semanticDiag");
+      const found = findEventResponse(server.responses, "semanticDiag");
       if (!found) {
         throw new assert.AssertionError();
       }
-      const semanticDiag = found as ts.server.protocol.DiagnosticEvent;
-      expect(semanticDiag.body!.file).toBe(file);
-      const diagnostic = semanticDiag.body!.diagnostics[0];
-      expect(diagnostic.text).toMatch(/@typescript-eslint\/no-unused-vars/);
-      expect(diagnostic.start.line).toBe(2);
-      expect(diagnostic.start.offset).toBe(9);
+      expect(maskFileNameForDiagnostics(found)).toMatchSnapshot();
     });
 
     it("should not reproduce issue #7", async () => {
@@ -73,13 +86,28 @@ describe("LanguageService plugin", () => {
       await server.waitEvent("projectLoadingFinish");
       server.send({ command: "geterr", arguments: { files: [file], delay: 0 } });
       await server.waitEvent("semanticDiag");
-      const found = findResponse(server.responses, "semanticDiag");
+      const found = findEventResponse(server.responses, "semanticDiag");
       if (!found) {
         throw new assert.AssertionError();
       }
-      const semanticDiag = found as ts.server.protocol.DiagnosticEvent;
-      expect(semanticDiag.body!.file).toBe(file);
-      expect(semanticDiag.body!.diagnostics).toEqual([]);
+      expect(maskFileNameForDiagnostics(found)).toMatchSnapshot();
     });
   });
+
+  describe("#getCodeFixes", () => {
+    it("should return codeFixes reported by ESLint rules", async () => {
+      server = createServer({ projectPath: path.resolve(__dirname, "../projects/simple") });
+      const { file, fileContent } = server.readFile("./main.ts");
+      server.send({ command: "open", arguments: { file, fileContent, scriptKindName: "TS" } });
+      await server.waitEvent("projectLoadingFinish");
+      server.send({ command:"getCodeFixes",arguments:{ file, startLine:1, startOffset:12, endLine:1, endOffset:12, errorCodes:[30010] } });
+      await server.waitResponse("getCodeFixes");
+      const found = findCommandResponse(server.responses, "getCodeFixes");
+      if (!found) {
+        throw new assert.AssertionError();
+      }
+      expect(maskFileNameForCodeFixes(found)).toMatchSnapshot();
+    });
+  });
+
 });

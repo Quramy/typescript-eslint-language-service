@@ -3,11 +3,9 @@ import { Linter } from "eslint";
 import { AstConverter } from "./ast-converter";
 import { InvalidParserError } from "./errors";
 import { ConfigProvider } from "./eslint-config-provider";
+import { TS_LANGSERVICE_ESLINT_DIAGNOSTIC_ERROR_CODE } from "./consts";
 
-// TODO refactor global const
-export const TS_LANGSERVICE_ESLINT_DIAGNOSTIC_ERROR_CODE = 30010;
-
-export function translateESLintResult(result: Linter.LintMessage[], sourceFile: ts.SourceFile): ts.Diagnostic[] {
+export function translateToDiagnosticsFromESLintResult(result: Linter.LintMessage[], sourceFile: ts.SourceFile): ts.Diagnostic[] {
   return result.map(({ message, severity, ruleId, line, column, endLine, endColumn })=> {
     const messageText = `[${ruleId}] ${message}`;
 
@@ -37,6 +35,41 @@ export function translateESLintResult(result: Linter.LintMessage[], sourceFile: 
   });
 }
 
+export function isIntersect(message: Linter.LintMessage, range: { start: number; end: number }, sourceFile: ts.SourceFile) {
+  const { line, column, endLine, endColumn } = message;
+  const mStart = ts.getPositionOfLineAndCharacter(sourceFile, line - 1, column - 1);
+  const mEnd = endLine && endColumn ? ts.getPositionOfLineAndCharacter(sourceFile, endLine - 1, endColumn -1) : mStart;
+  return !(mEnd < range.start || mStart > range.end);
+}
+
+export function translateToCodeFixesFromESLintResult(result: Linter.LintMessage[], fileName: string): ts.CodeFixAction[] {
+  return result.reduce((acc, { message, ruleId, fix }) => {
+    if (!fix) {
+      return acc;
+    }
+    const rid = ruleId || "eslint";
+    const rangeStart = fix.range[0];
+    const rangeLength = fix.range[1] ? fix.range[1] - fix.range[0] : 0;
+    const codeFixAction: ts.CodeFixAction = {
+      description: `fix: ${message}`,
+      fixId: rid,
+      fixName: rid,
+      changes: [{
+        fileName,
+        isNewFile: false,
+        textChanges: [{
+          span: {
+            start: rangeStart,
+            length: rangeLength,
+          },
+          newText: fix.text,
+        }],
+      }]
+    };
+    return [...acc, codeFixAction];
+  }, [] as ts.CodeFixAction[]);
+}
+
 export type ESLintAdapterOptions = {
   logger: (msg: string) => void;
   getSourceFile: (fileName: string) => ts.SourceFile | undefined;
@@ -64,6 +97,19 @@ export class ESLintAdapter {
     this.getSourceFile = getSourceFile;
   }
 
+  private getESLintResult(fileName: string, sourceFile: ts.SourceFile) {
+    const configArray = this.configProvider.getConfigArrayForFile(fileName);
+    const configFileContent = configArray.extractConfig(fileName).toCompatibleObjectAsConfigFileContent();
+    if (!configFileContent.parser || !/@typescript-eslint\/parser/.test(configFileContent.parser)) {
+      throw new InvalidParserError();
+    }
+    const parserOptions = configFileContent.parserOptions ? configFileContent.parserOptions : { };
+    const sourceCode = this.converter.convertToESLintSourceCode(sourceFile, parserOptions);
+
+    // See https://github.com/eslint/eslint/blob/v6.1.0/lib/linter/linter.js#L1130
+    return this.linter.verify(sourceCode, configArray as any, { filename: fileName });
+  }
+
   public getSemanticDiagnostics(delegate: ts.LanguageService["getSemanticDiagnostics"], fileName: string): ReturnType<ts.LanguageService["getSemanticDiagnostics"]> {
     const original = delegate(fileName);
     try {
@@ -71,21 +117,40 @@ export class ESLintAdapter {
       if (!sourceFile) {
         return original;
       }
-      const configArray = this.configProvider.getConfigArrayForFile(fileName);
-      const configFileContent = configArray.extractConfig(fileName).toCompatibleObjectAsConfigFileContent();
-      if (!configFileContent.parser || !/@typescript-eslint\/parser/.test(configFileContent.parser)) {
-        throw new InvalidParserError();
-      }
-      const parserOptions = configFileContent.parserOptions ? configFileContent.parserOptions : { };
-      const sourceCode = this.converter.convertToESLintSourceCode(sourceFile, parserOptions);
+      const eslintResult = this.getESLintResult(fileName, sourceFile);
 
-      // See https://github.com/eslint/eslint/blob/v6.1.0/lib/linter/linter.js#L1130
-      const eslintResult = this.linter.verify(sourceCode, configArray as any, { filename: fileName });
-
-      return [...original, ...translateESLintResult(eslintResult, sourceFile)];
+      return [...original, ...translateToDiagnosticsFromESLintResult(eslintResult, sourceFile)];
     } catch (error) {
       this.logger(error.message ? error.message : "unknow error");
       return original;
     }
+  }
+
+  public getCodeFixesAtPosition(delegate: ts.LanguageService["getCodeFixesAtPosition"], fileName: string, start: number, end: number, errorCodes: number[], formatOptions: ts.FormatCodeSettings, preferences: ts.UserPreferences):  ReturnType<ts.LanguageService["getCodeFixesAtPosition"]> {
+    const original = delegate(fileName, start, end, errorCodes, formatOptions, preferences);
+    try {
+      if (!errorCodes.includes(TS_LANGSERVICE_ESLINT_DIAGNOSTIC_ERROR_CODE)) {
+        return original;
+      }
+
+      const sourceFile = this.getSourceFile(fileName);
+      if (!sourceFile) {
+        return original;
+      }
+
+      const eslintResult = this.getESLintResult(fileName, sourceFile);
+
+      return [
+        ...original,
+        ...translateToCodeFixesFromESLintResult(
+          eslintResult.filter(r => isIntersect(r, { start, end }, sourceFile)),
+          fileName,
+        ),
+      ];
+    } catch (error) {
+      this.logger(error.message ? error.message : "unknow error");
+      return original;
+    }
+    return original;
   }
 }

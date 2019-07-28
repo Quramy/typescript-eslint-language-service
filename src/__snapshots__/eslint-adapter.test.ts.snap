@@ -1,5 +1,34 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`ESLintAdapter #getCodeFixesAtPosition shuld only delegate when input errorCodes does not include TS_LANGSERVICE_ESLINT_DIAGNOSTIC_ERROR_CODE 1`] = `Array []`;
+
+exports[`ESLintAdapter #getCodeFixesAtPosition shuld only delegate when input range isn't intersected ESLint reported results 1`] = `Array []`;
+
+exports[`ESLintAdapter #getCodeFixesAtPosition shuld return ESLint sourceCodeFixer result as TypeScript codeFixAction format 1`] = `
+Array [
+  Object {
+    "changes": Array [
+      Object {
+        "fileName": "main.ts",
+        "isNewFile": false,
+        "textChanges": Array [
+          Object {
+            "newText": "\\"use strict\\"",
+            "span": Object {
+              "length": 12,
+              "start": 0,
+            },
+          },
+        ],
+      },
+    ],
+    "description": "fix: Strings must use doublequote.",
+    "fixId": "quotes",
+    "fixName": "quotes",
+  },
+]
+`;
+
 exports[`ESLintAdapter #getSemanticDiagnostics shuld return ESLint verification result as TypeScript diagnostic format 1`] = `
 Array [
   Object {

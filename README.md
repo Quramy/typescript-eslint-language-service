@@ -12,6 +12,7 @@ TypeScript language service plugin to check ESLint errors.
 ## Features
 
 - Report ESLint errors as TypeScript semantic diagnostics
+- Create code-fix for ESLint errors if they have fixer
 
 ## Usage
 
