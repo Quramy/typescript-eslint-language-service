@@ -19,8 +19,13 @@ function maskFileNameForDiagnostics(result: ts.server.protocol.DiagnosticEvent) 
 
 function maskFileNameForCodeFixes(response: ts.server.protocol.CodeFixResponse) {
   if (!response.body) return response;
-  response.body.forEach(b => {
+  response.body = response.body.map(b => {
     b.fixName = "<fileName>";
+    b.changes = b.changes.map(c => {
+      c.fileName = "<fileName>";
+      return c;
+    });
+    return b;
   });
   return response;
 }

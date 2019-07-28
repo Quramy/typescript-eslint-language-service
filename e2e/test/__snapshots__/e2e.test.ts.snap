@@ -6,7 +6,7 @@ Object {
     Object {
       "changes": Array [
         Object {
-          "fileName": "/Users/yosuke/workspace/javascript/typescript-eslint-language-service/e2e/projects/simple/main.ts",
+          "fileName": "<fileName>",
           "textChanges": Array [
             Object {
               "end": Object {
