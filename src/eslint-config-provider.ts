@@ -1,6 +1,5 @@
 import path from "path";
 import ts from "typescript";
-import { InternalConfig } from "eslint/lib/cli-engine/config-array/extracted-config";
 import { ConfigArray } from "eslint/lib/cli-engine/config-array/config-array";
 import {
   CascadingConfigArrayFactory,
@@ -26,7 +25,7 @@ const ESLINTRC_SUFFIX_LIST = [
 ];
 
 export interface ConfigProvider {
-  getConfigArrayForFile(fileName: string): ConfigArray<InternalConfig>;
+  getConfigArrayForFile(fileName: string): ConfigArray;
 }
 
 export class ESLintConfigProvider implements ConfigProvider {

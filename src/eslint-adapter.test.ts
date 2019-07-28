@@ -18,9 +18,12 @@ class TestingConfigProvider implements ConfigProvider {
   }
 }
 
-function filterDiag(diagnostics: ts.Diagnostic[]) {
-  // eslint-disable-next-line
-  return diagnostics.map(({ file, ...rest }: ts.Diagnostic) => ({ ...rest }));
+// `diagnostic.file` is so noisy for snapshot test
+function filterSourceFileFromDiagnosticList(diagnostics: ts.Diagnostic[]) {
+  return diagnostics.map(d => {
+    delete d.file;
+    return d;
+  });
 }
 
 describe("ESLintAdapter", () => {
@@ -36,7 +39,7 @@ describe("ESLintAdapter", () => {
         configProvider,
         logger: () => { },
       });
-      const diagnostics = filterDiag(adapter.getSemanticDiagnostics(() => [], "main.ts"));
+      const diagnostics = filterSourceFileFromDiagnosticList(adapter.getSemanticDiagnostics(() => [], "main.ts"));
       expect(diagnostics).toMatchSnapshot();
     });
   });

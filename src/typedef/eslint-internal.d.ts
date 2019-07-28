@@ -17,10 +17,10 @@ declare module "eslint/lib/cli-engine/config-array/extracted-config" {
 }
 
 declare module "eslint/lib/cli-engine/config-array/config-array" {
-  import { ExtractedConfig } from "eslint/lib/cli-engine/config-array/extracted-config";
+  import { ExtractedConfig, InternalConfig } from "eslint/lib/cli-engine/config-array/extracted-config";
 
-  export class ConfigArray<T = any> extends Array<T> {
-    public constructor(...args: any[]);
+  export class ConfigArray<T = InternalConfig> extends Array<T> {
+    public constructor(...args: T[]);
     public extractConfig(filename: string): ExtractedConfig;
   }
 }
