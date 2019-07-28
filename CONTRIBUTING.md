@@ -4,6 +4,10 @@
 $ yarn --pure-lockfile
 ```
 
+```sh
+$ yarn build:local
+```
+
 The above command builds this plugin under `local` directory.
 And the built module is referenced from this project's tsconfig.json.
 So, whenever you edit the source code of this project, this plugin itself tell you ESLint errors on your editor.
