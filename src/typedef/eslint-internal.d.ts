@@ -3,21 +3,31 @@
  * These modules are accesible, but they're not public API.
  *
  */
-declare module "eslint/lib/cli-engine/cascading-config-array-factory" {
-
+declare module "eslint/lib/cli-engine/config-array/extracted-config" {
   import { Linter } from "eslint";
 
   export interface InternalConfig extends Linter.Config {
-    plugins: any;
+    parser: any;
+    plugins?: any;
   }
 
   export interface ExtractedConfig extends Linter.Config {
     toCompatibleObjectAsConfigFileContent(): Linter.Config;
   }
+}
 
-  export interface ConfigArray<T> extends Array<T> {
-    extractConfig(filename: string): ExtractedConfig;
+declare module "eslint/lib/cli-engine/config-array/config-array" {
+  import { ExtractedConfig } from "eslint/lib/cli-engine/config-array/extracted-config";
+
+  export class ConfigArray<T = any> extends Array<T> {
+    public constructor(...args: any[]);
+    public extractConfig(filename: string): ExtractedConfig;
   }
+}
+
+declare module "eslint/lib/cli-engine/cascading-config-array-factory" {
+  import { InternalConfig } from "eslint/lib/cli-engine/config-array/extracted-config";
+  import { ConfigArray } from "eslint/lib/cli-engine/config-array/config-array";
 
   /**
    *
@@ -28,5 +38,4 @@ declare module "eslint/lib/cli-engine/cascading-config-array-factory" {
     public getConfigArrayForFile(filename: string): ConfigArray<InternalConfig>;
     public clearCache(): void;
   }
-
 }

@@ -2,7 +2,7 @@ import ts from "typescript";
 import { Linter } from "eslint";
 import { AstConverter } from "./ast-converter";
 import { InvalidParserError } from "./errors";
-import { ESLintConfigProvider } from "./eslint-config-provider";
+import { ConfigProvider } from "./eslint-config-provider";
 
 // TODO refactor global const
 export const TS_LANGSERVICE_ESLINT_DIAGNOSTIC_ERROR_CODE = 30010;
@@ -41,14 +41,14 @@ export type ESLintAdapterOptions = {
   logger: (msg: string) => void;
   getSourceFile: (fileName: string) => ts.SourceFile | undefined;
   converter: AstConverter;
-  configProvider: ESLintConfigProvider;
+  configProvider: ConfigProvider;
 };
 
 export class ESLintAdapter {
   private readonly linter: Linter;
   private readonly logger: (msg: string) => void;
   private readonly converter: AstConverter;
-  private readonly configProvider: ESLintConfigProvider;
+  private readonly configProvider: ConfigProvider;
   private readonly getSourceFile: (fileName: string) => ts.SourceFile | undefined;
 
   public constructor({
@@ -84,6 +84,7 @@ export class ESLintAdapter {
 
       return [...original, ...translateESLintResult(eslintResult, sourceFile)];
     } catch (error) {
+      console.log(error);
       this.logger(error.message ? error.message : "unknow error");
       return original;
     }
