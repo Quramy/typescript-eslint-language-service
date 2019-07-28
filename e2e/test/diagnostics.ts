@@ -1,6 +1,5 @@
 import path from "path";
 import assert from "assert";
-import ts from "typescript/lib/tsserverlibrary";
 import { createServer, TSServer } from "../helper/server";
 
 function findResponse(responses: any[], eventName: string) {
@@ -25,9 +24,7 @@ describe("LanguageService plugin", () => {
       if (!found) {
         throw new assert.AssertionError();
       }
-      const semanticDiag = found as ts.server.protocol.DiagnosticEvent;
-      expect(semanticDiag.body!.file).toBe(file);
-      expect(semanticDiag.body!.diagnostics).toEqual([]);
+      expect(found).toMatchSnapshot();
     });
 
     it("should return ESLint error when the project uses @typescript-eslint/parser", async () => {
@@ -41,10 +38,7 @@ describe("LanguageService plugin", () => {
       if (!found) {
         throw new assert.AssertionError();
       }
-      const semanticDiag = found as ts.server.protocol.DiagnosticEvent;
-      expect(semanticDiag.body!.file).toBe(file);
-      const diagnostic = semanticDiag.body!.diagnostics[0];
-      expect(diagnostic.text).toMatch(/Missing semicolon./);
+      expect(found).toMatchSnapshot();
     });
 
     it("should return ESLint error when the project is configured with ESLint plugins", async () => {
@@ -58,12 +52,7 @@ describe("LanguageService plugin", () => {
       if (!found) {
         throw new assert.AssertionError();
       }
-      const semanticDiag = found as ts.server.protocol.DiagnosticEvent;
-      expect(semanticDiag.body!.file).toBe(file);
-      const diagnostic = semanticDiag.body!.diagnostics[0];
-      expect(diagnostic.text).toMatch(/@typescript-eslint\/no-unused-vars/);
-      expect(diagnostic.start.line).toBe(2);
-      expect(diagnostic.start.offset).toBe(9);
+      expect(found).toMatchSnapshot();
     });
 
     it("should not reproduce issue #7", async () => {
@@ -77,9 +66,7 @@ describe("LanguageService plugin", () => {
       if (!found) {
         throw new assert.AssertionError();
       }
-      const semanticDiag = found as ts.server.protocol.DiagnosticEvent;
-      expect(semanticDiag.body!.file).toBe(file);
-      expect(semanticDiag.body!.diagnostics).toEqual([]);
+      expect(found).toMatchSnapshot();
     });
   });
 });

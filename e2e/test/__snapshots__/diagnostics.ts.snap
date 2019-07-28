@@ -1,0 +1,77 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LanguageService plugin #getSemanticDiagnostics should not reproduce issue #7 1`] = `
+Object {
+  "body": Object {
+    "diagnostics": Array [],
+    "file": "/Users/yosuke/workspace/javascript/typescript-eslint-language-service/e2e/projects/ts-eslint-plugin/reproduce_issue_7/main.ts",
+  },
+  "event": "semanticDiag",
+  "seq": 0,
+  "type": "event",
+}
+`;
+
+exports[`LanguageService plugin #getSemanticDiagnostics should not return ESLint error when the project does not use @typescript-eslint/parser 1`] = `
+Object {
+  "body": Object {
+    "diagnostics": Array [],
+    "file": "/Users/yosuke/workspace/javascript/typescript-eslint-language-service/e2e/projects/other-parser/main.ts",
+  },
+  "event": "semanticDiag",
+  "seq": 0,
+  "type": "event",
+}
+`;
+
+exports[`LanguageService plugin #getSemanticDiagnostics should return ESLint error when the project is configured with ESLint plugins 1`] = `
+Object {
+  "body": Object {
+    "diagnostics": Array [
+      Object {
+        "category": "error",
+        "code": 30010,
+        "end": Object {
+          "line": 2,
+          "offset": 10,
+        },
+        "start": Object {
+          "line": 2,
+          "offset": 9,
+        },
+        "text": "[@typescript-eslint/no-unused-vars] 'a' is assigned a value but never used.",
+      },
+    ],
+    "file": "/Users/yosuke/workspace/javascript/typescript-eslint-language-service/e2e/projects/ts-eslint-plugin/main.ts",
+  },
+  "event": "semanticDiag",
+  "seq": 0,
+  "type": "event",
+}
+`;
+
+exports[`LanguageService plugin #getSemanticDiagnostics should return ESLint error when the project uses @typescript-eslint/parser 1`] = `
+Object {
+  "body": Object {
+    "diagnostics": Array [
+      Object {
+        "category": "error",
+        "code": 30010,
+        "end": Object {
+          "line": 1,
+          "offset": 12,
+        },
+        "start": Object {
+          "line": 1,
+          "offset": 12,
+        },
+        "text": "[semi] Missing semicolon.",
+      },
+    ],
+    "file": "/Users/yosuke/workspace/javascript/typescript-eslint-language-service/e2e/projects/simple/main.ts",
+  },
+  "event": "semanticDiag",
+  "seq": 0,
+  "type": "event",
+}
+`;
