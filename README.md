@@ -7,7 +7,7 @@
 
 TypeScript language service plugin to check ESLint errors.
 
-![Image from Gyazo](https://i.gyazo.com/1f14fb8d09927b9388551058c3387b81.png)
+![Screencast](https://github.com/Quramy/typescript-eslint-language-service/blob/master/cast.gif)
 
 ## Features
 
