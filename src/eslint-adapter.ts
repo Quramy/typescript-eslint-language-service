@@ -84,7 +84,6 @@ export class ESLintAdapter {
 
       return [...original, ...translateESLintResult(eslintResult, sourceFile)];
     } catch (error) {
-      console.log(error);
       this.logger(error.message ? error.message : "unknow error");
       return original;
     }

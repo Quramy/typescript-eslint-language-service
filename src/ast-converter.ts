@@ -25,7 +25,7 @@ function createExtra(code: string) {
     strict: false,
     jsx: false,
     useJSXTextNode: false,
-    log: console.log,
+    log: () => { },
     projects: [],
     errorOnUnknownASTType: false,
     errorOnTypeScriptSyntacticAndSemanticIssues: false,
