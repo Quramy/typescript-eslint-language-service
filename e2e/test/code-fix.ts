@@ -1,9 +1,18 @@
 import path from "path";
 import assert from "assert";
+import ts from "typescript/lib/tsserverlibrary";
 import { createServer, TSServer } from "../helper/server";
 
 function findResponse(responses: any[], commandName: string) {
   return responses.find(response => response.command === commandName);
+}
+
+function maskFileName(response: ts.server.protocol.CodeFixResponse) {
+  if (!response.body) return response;
+  response.body.forEach(b => {
+    b.fixName = "<fileName>";
+  });
+  return response;
 }
 
 describe("LanguageService plugin", () => {
@@ -24,7 +33,7 @@ describe("LanguageService plugin", () => {
       if (!found) {
         throw new assert.AssertionError();
       }
-      expect(found).toMatchSnapshot();
+      expect(maskFileName(found)).toMatchSnapshot();
     });
   });
 });

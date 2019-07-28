@@ -4,7 +4,7 @@ exports[`LanguageService plugin #getSemanticDiagnostics should not reproduce iss
 Object {
   "body": Object {
     "diagnostics": Array [],
-    "file": "/Users/yosuke/workspace/javascript/typescript-eslint-language-service/e2e/projects/ts-eslint-plugin/reproduce_issue_7/main.ts",
+    "file": "<file>",
   },
   "event": "semanticDiag",
   "seq": 0,
@@ -16,7 +16,7 @@ exports[`LanguageService plugin #getSemanticDiagnostics should not return ESLint
 Object {
   "body": Object {
     "diagnostics": Array [],
-    "file": "/Users/yosuke/workspace/javascript/typescript-eslint-language-service/e2e/projects/other-parser/main.ts",
+    "file": "<file>",
   },
   "event": "semanticDiag",
   "seq": 0,
@@ -42,7 +42,7 @@ Object {
         "text": "[@typescript-eslint/no-unused-vars] 'a' is assigned a value but never used.",
       },
     ],
-    "file": "/Users/yosuke/workspace/javascript/typescript-eslint-language-service/e2e/projects/ts-eslint-plugin/main.ts",
+    "file": "<file>",
   },
   "event": "semanticDiag",
   "seq": 0,
@@ -68,7 +68,7 @@ Object {
         "text": "[semi] Missing semicolon.",
       },
     ],
-    "file": "/Users/yosuke/workspace/javascript/typescript-eslint-language-service/e2e/projects/simple/main.ts",
+    "file": "<file>",
   },
   "event": "semanticDiag",
   "seq": 0,

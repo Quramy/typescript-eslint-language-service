@@ -1,9 +1,16 @@
 import path from "path";
 import assert from "assert";
+import ts from "typescript/lib/tsserverlibrary";
 import { createServer, TSServer } from "../helper/server";
 
 function findResponse(responses: any[], eventName: string) {
   return responses.find(response => response.event === eventName);
+}
+
+function maskFileName(result: ts.server.protocol.DiagnosticEvent) {
+  if (!result.body) return result;
+  result.body.file = "<file>";
+  return result;
 }
 
 describe("LanguageService plugin", () => {
@@ -24,7 +31,7 @@ describe("LanguageService plugin", () => {
       if (!found) {
         throw new assert.AssertionError();
       }
-      expect(found).toMatchSnapshot();
+      expect(maskFileName(found)).toMatchSnapshot();
     });
 
     it("should return ESLint error when the project uses @typescript-eslint/parser", async () => {
@@ -38,7 +45,7 @@ describe("LanguageService plugin", () => {
       if (!found) {
         throw new assert.AssertionError();
       }
-      expect(found).toMatchSnapshot();
+      expect(maskFileName(found)).toMatchSnapshot();
     });
 
     it("should return ESLint error when the project is configured with ESLint plugins", async () => {
@@ -52,7 +59,7 @@ describe("LanguageService plugin", () => {
       if (!found) {
         throw new assert.AssertionError();
       }
-      expect(found).toMatchSnapshot();
+      expect(maskFileName(found)).toMatchSnapshot();
     });
 
     it("should not reproduce issue #7", async () => {
@@ -66,7 +73,7 @@ describe("LanguageService plugin", () => {
       if (!found) {
         throw new assert.AssertionError();
       }
-      expect(found).toMatchSnapshot();
+      expect(maskFileName(found)).toMatchSnapshot();
     });
   });
 });
