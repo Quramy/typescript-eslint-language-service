@@ -103,7 +103,7 @@ export class ESLintAdapter {
   }
 
   private getESLintResult(fileName: string, sourceFile: ts.SourceFile) {
-    if (this.pathMatcher && this.pathMatcher.shouldBeIgnored(fileName)) {
+    if (this.pathMatcher && this.pathMatcher.notContains(fileName)) {
       return [];
     }
     const configArray = this.configProvider.getConfigArrayForFile(fileName);

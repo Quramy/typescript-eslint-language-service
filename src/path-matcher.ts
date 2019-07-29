@@ -1,7 +1,7 @@
 import { IgnoredPaths } from "eslint/lib/cli-engine/ignored-paths";
 
 export interface PathMatcher {
-  shouldBeIgnored(filepath: string): boolean;
+  notContains(filepath: string): boolean;
 }
 
 export type ESLintIgnoredPathsMatcherOptions = {
@@ -18,7 +18,7 @@ export class ESLintIgnoredPathsMatcher implements PathMatcher {
     });
   }
 
-  public shouldBeIgnored(filepath: string) {
+  public notContains(filepath: string) {
     return this.ignoredPaths.contains(filepath);
   }
 }
