@@ -4,6 +4,7 @@ import { AstConverter } from "./ast-converter";
 import { InvalidParserError } from "./errors";
 import { ConfigProvider } from "./eslint-config-provider";
 import { TS_LANGSERVICE_ESLINT_DIAGNOSTIC_ERROR_CODE } from "./consts";
+import { PathMatcher } from "./path-matcher";
 
 export function translateToDiagnosticsFromESLintResult(result: Linter.LintMessage[], sourceFile: ts.SourceFile): ts.Diagnostic[] {
   return result.map(({ message, severity, ruleId, line, column, endLine, endColumn })=> {
@@ -75,6 +76,7 @@ export type ESLintAdapterOptions = {
   getSourceFile: (fileName: string) => ts.SourceFile | undefined;
   converter: AstConverter;
   configProvider: ConfigProvider;
+  pathMatcher?: PathMatcher;
 };
 
 export class ESLintAdapter {
@@ -82,22 +84,28 @@ export class ESLintAdapter {
   private readonly logger: (msg: string) => void;
   private readonly converter: AstConverter;
   private readonly configProvider: ConfigProvider;
+  private readonly pathMatcher?: PathMatcher;
   private readonly getSourceFile: (fileName: string) => ts.SourceFile | undefined;
 
   public constructor({
     logger,
     converter,
     configProvider,
+    pathMatcher,
     getSourceFile,
   }: ESLintAdapterOptions) {
     this.linter = new Linter();
     this.logger = logger;
     this.converter = converter;
     this.configProvider = configProvider;
+    this.pathMatcher = pathMatcher;
     this.getSourceFile = getSourceFile;
   }
 
   private getESLintResult(fileName: string, sourceFile: ts.SourceFile) {
+    if (this.pathMatcher && this.pathMatcher.shouldBeIgnored(fileName)) {
+      return [];
+    }
     const configArray = this.configProvider.getConfigArrayForFile(fileName);
     const configFileContent = configArray.extractConfig(fileName).toCompatibleObjectAsConfigFileContent();
     if (!configFileContent.parser || !/@typescript-eslint\/parser/.test(configFileContent.parser)) {
