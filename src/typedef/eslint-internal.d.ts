@@ -39,3 +39,10 @@ declare module "eslint/lib/cli-engine/cascading-config-array-factory" {
     public clearCache(): void;
   }
 }
+
+declare module "eslint/lib/cli-engine/ignored-paths" {
+  export class IgnoredPaths {
+    public constructor(options: { cwd?: string });
+    public contains(filepath: string, category?: "default" | "custom" | undefined): boolean;
+  }
+}
