@@ -6,7 +6,7 @@ import { analyzeScope } from "@typescript-eslint/parser/dist/analyze-scope";
 import { simpleTraverse } from "@typescript-eslint/parser/dist/simple-traverse";
 import { visitorKeys } from "@typescript-eslint/parser/dist/visitor-keys";
 import { ParseAndGenerateServicesResult, TSESTreeOptions } from "@typescript-eslint/typescript-estree";
-import convert from "@typescript-eslint/typescript-estree/dist/ast-converter";
+import * as TsEstree from "@typescript-eslint/typescript-estree/dist/ast-converter";
 
 function validateBoolean(value: boolean | undefined, fallback: boolean = false): boolean {
   if (typeof value !== "boolean") {
@@ -33,6 +33,7 @@ function createExtra(code: string) {
     tsconfigRootDir: process.cwd(),
     extraFileExtensions: [],
     preserveNodeMaps: undefined,
+    createDefaultProgram: false,
   };
   return {
     ...base,
@@ -165,6 +166,13 @@ export class AstConverter {
         extra.errorOnTypeScriptSyntacticAndSemanticIssues = true;
       }
     }
+
+    // Note:
+    //
+    // astConverter is an internal API and it has changed from default exported function to named exported one via 1.x -> 2.x
+    //
+    // See also https://github.com/typescript-eslint/typescript-eslint/pull/535/files#diff-45d8ff2254adb960ab07ac35ada146a8L7
+    const convert = TsEstree.astConverter || (TsEstree as any).default as typeof TsEstree.astConverter;
     const { estree, astMaps } = convert(src, extra, true);
 
     /**
