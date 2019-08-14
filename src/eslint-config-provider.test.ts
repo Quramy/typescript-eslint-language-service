@@ -13,8 +13,6 @@ class FileUpdater {
   public path!: string;
   public originalContent?: string;
   public callbackList: { path: string; callback: ts.FileWatcherCallback }[] = [];
-  public constructor() {
-  }
 
   public init(path: string) {
     this.path = path;
@@ -57,7 +55,8 @@ describe("ESLintConfigProvider", () => {
 
   describe("#getConfigForFile", () => {
 
-    let fileUpdater = new FileUpdater();
+    const fileUpdater = new FileUpdater();
+
     afterEach(() => fileUpdater.reset());
 
     it("should load base config", () => {
