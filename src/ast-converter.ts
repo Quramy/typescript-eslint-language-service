@@ -8,7 +8,7 @@ import { visitorKeys } from "@typescript-eslint/parser/dist/visitor-keys";
 import { ParseAndGenerateServicesResult, TSESTreeOptions } from "@typescript-eslint/typescript-estree";
 import * as TsEstree from "@typescript-eslint/typescript-estree/dist/ast-converter";
 
-function validateBoolean(value: boolean | undefined, fallback: boolean = false): boolean {
+function validateBoolean(value: boolean | undefined, fallback = false): boolean {
   if (typeof value !== "boolean") {
     return fallback;
   }
