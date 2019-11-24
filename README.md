@@ -20,6 +20,7 @@ TypeScript language service plugin to check ESLint errors.
 
 - `typescript`
 - `@typescpt-eslint/parser`
+- `@typescpt-eslint/typescript-estree`
 - `eslint`
 
 ### Install

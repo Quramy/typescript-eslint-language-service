@@ -1,10 +1,10 @@
 import ts from "typescript";
-import { ParserOptions } from "@typescript-eslint/parser";
 import { SourceCode, AST, Scope } from "eslint";
-import { Extra } from "@typescript-eslint/typescript-estree/dist/parser-options";
+import { ParserOptions } from "@typescript-eslint/parser";
 import { analyzeScope } from "@typescript-eslint/parser/dist/analyze-scope";
-import { simpleTraverse } from "@typescript-eslint/parser/dist/simple-traverse";
-import { visitorKeys } from "@typescript-eslint/parser/dist/visitor-keys";
+import { Extra } from "@typescript-eslint/typescript-estree/dist/parser-options";
+import { simpleTraverse } from "@typescript-eslint/typescript-estree/dist/simple-traverse";
+import { visitorKeys } from "@typescript-eslint/typescript-estree/dist/visitor-keys";
 import { ParseAndGenerateServicesResult, TSESTreeOptions } from "@typescript-eslint/typescript-estree";
 import * as TsEstree from "@typescript-eslint/typescript-estree/dist/ast-converter";
 
@@ -34,6 +34,7 @@ function createExtra(code: string) {
     extraFileExtensions: [],
     preserveNodeMaps: undefined,
     createDefaultProgram: false,
+    filePath: "",
   };
   return {
     ...base,
