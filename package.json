@@ -1,6 +1,6 @@
 {
   "name": "typescript-eslint-language-service",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "TypeScript language service plugin for ESLint",
   "main": "lib/index.js",
   "scripts": {
@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/Quramy/typescript-eslint-language-service#readme",
   "peerDependencies": {
-    "@typescript-eslint/parser": "^1.0.0 || ^2.0.0",
+    "@typescript-eslint/parser": ">= 1.0.0 < 2.8",
     "eslint": "^6.0.0",
     "typescript": "^2.3.0 || ^3.0.0"
   },
