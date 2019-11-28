@@ -13,7 +13,7 @@ function create(info: ts.server.PluginCreateInfo): ts.LanguageService {
   const projectDir = path.dirname(project.getProjectName());
   const logger = (msg: string) => project.projectService.logger.info(`[typescript-eslint-language-service] ${msg}`);
 
-  logger("config: " + pluginConfigObj);
+  logger("config: " + JSON.stringify(pluginConfigObj));
 
   let watchDirs: string[];
   if (Array.isArray(pluginConfigObj.watchDirs)) {
