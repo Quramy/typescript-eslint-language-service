@@ -59,5 +59,8 @@
       "ts",
       "json"
     ]
+  },
+  "dependencies": {
+    "read-pkg-up": "^7.0.0"
   }
 }
