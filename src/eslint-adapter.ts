@@ -53,7 +53,7 @@ export function translateToCodeFixesFromESLintResult(result: Linter.LintMessage[
     const rangeStart = fix.range[0];
     const rangeLength = fix.range[1] ? fix.range[1] - fix.range[0] : 0;
     const codeFixAction: ts.CodeFixAction = {
-      description: `fix: ${message}`,
+      description: `Fix: ${message}`,
       fixId: rid,
       fixName: rid,
       changes: [{
