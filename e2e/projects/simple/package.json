@@ -2,9 +2,6 @@
   "name": "simple",
   "private": true,
   "scripts": {
-    "clean-plugin": "rimraf node_modules/typescript-eslint-language-service && mkdirp node_modules/typescript-eslint-language-service/lib",
-    "copy-plugin": "npm run clean-plugin && cpy \"../../../lib\" node_modules/typescript-eslint-language-service/lib && cpy ../../../package.json node_modules/typescript-eslint-language-service",
-    "postinstall": "npm run copy-plugin",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
