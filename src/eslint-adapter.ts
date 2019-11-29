@@ -5,6 +5,7 @@ import { AstConverter } from "./ast-converter";
 import { InvalidParserError } from "./errors";
 import { ConfigProvider } from "./eslint-config-provider";
 import { TS_LANGSERVICE_ESLINT_DIAGNOSTIC_ERROR_CODE } from "./consts";
+import { ParserOptions } from "@typescript-eslint/parser";
 
 export function translateToDiagnosticsFromESLintResult(result: Linter.LintMessage[], sourceFile: ts.SourceFile): ts.Diagnostic[] {
   return result.map(({ message, severity, ruleId, line, column, endLine, endColumn })=> {
@@ -110,7 +111,7 @@ export class ESLintAdapter {
       ((readPkgUp.sync({ cwd: configFileContent.parser })?.packageJson.name ?? "") !== "@typescript-eslint/parser")) {
       throw new InvalidParserError();
     }
-    const parserOptions = configFileContent.parserOptions ? configFileContent.parserOptions : { };
+    const parserOptions = (configFileContent.parserOptions ? configFileContent.parserOptions : { }) as ParserOptions;
     const sourceCode = this.converter.convertToESLintSourceCode(sourceFile, parserOptions);
 
     // See https://github.com/eslint/eslint/blob/v6.1.0/lib/linter/linter.js#L1130
