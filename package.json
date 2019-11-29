@@ -25,12 +25,6 @@
     "url": "https://github.com/Quramy/typescript-eslint-language-service/issues"
   },
   "homepage": "https://github.com/Quramy/typescript-eslint-language-service#readme",
-  "peerDependencies": {
-    "@typescript-eslint/parser": "^2.8.0",
-    "@typescript-eslint/typescript-estree": "^2.8.0",
-    "eslint": "^6.0.0",
-    "typescript": "^2.3.0 || ^3.0.0"
-  },
   "devDependencies": {
     "@types/eslint": "^4.16.6",
     "@types/jest": "^24.0.15",
