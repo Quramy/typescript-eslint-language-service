@@ -22,7 +22,7 @@ Array [
         ],
       },
     ],
-    "description": "fix: Strings must use doublequote.",
+    "description": "Fix: Strings must use doublequote.",
     "fixId": "quotes",
     "fixName": "quotes",
   },
