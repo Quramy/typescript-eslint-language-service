@@ -22,7 +22,7 @@ Object {
           ],
         },
       ],
-      "description": "Fix: Missing semicolon.",
+      "description": "fix: Missing semicolon.",
       "fixId": "semi",
       "fixName": "<fileName>",
     },
