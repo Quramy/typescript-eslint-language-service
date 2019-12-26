@@ -1,10 +1,11 @@
+import readPkgUp = require("read-pkg-up");
 import ts from "typescript";
-import { Linter } from "eslint";
+import { Linter, CLIEngine } from "eslint";
 import { AstConverter } from "./ast-converter";
 import { InvalidParserError } from "./errors";
 import { ConfigProvider } from "./eslint-config-provider";
 import { TS_LANGSERVICE_ESLINT_DIAGNOSTIC_ERROR_CODE } from "./consts";
-import { PathMatcher } from "./path-matcher";
+import { ParserOptions } from "@typescript-eslint/parser";
 
 export function translateToDiagnosticsFromESLintResult(result: Linter.LintMessage[], sourceFile: ts.SourceFile): ts.Diagnostic[] {
   return result.map(({ message, severity, ruleId, line, column, endLine, endColumn })=> {
@@ -52,7 +53,7 @@ export function translateToCodeFixesFromESLintResult(result: Linter.LintMessage[
     const rangeStart = fix.range[0];
     const rangeLength = fix.range[1] ? fix.range[1] - fix.range[0] : 0;
     const codeFixAction: ts.CodeFixAction = {
-      description: `fix: ${message}`,
+      description: `Fix: ${message}`,
       fixId: rid,
       fixName: rid,
       changes: [{
@@ -76,7 +77,6 @@ export type ESLintAdapterOptions = {
   getSourceFile: (fileName: string) => ts.SourceFile | undefined;
   converter: AstConverter;
   configProvider: ConfigProvider;
-  pathMatcher?: PathMatcher;
 };
 
 export class ESLintAdapter {
@@ -84,34 +84,34 @@ export class ESLintAdapter {
   private readonly logger: (msg: string) => void;
   private readonly converter: AstConverter;
   private readonly configProvider: ConfigProvider;
-  private readonly pathMatcher?: PathMatcher;
   private readonly getSourceFile: (fileName: string) => ts.SourceFile | undefined;
 
   public constructor({
     logger,
     converter,
     configProvider,
-    pathMatcher,
     getSourceFile,
   }: ESLintAdapterOptions) {
     this.linter = new Linter();
     this.logger = logger;
     this.converter = converter;
     this.configProvider = configProvider;
-    this.pathMatcher = pathMatcher;
     this.getSourceFile = getSourceFile;
   }
 
   private getESLintResult(fileName: string, sourceFile: ts.SourceFile) {
-    if (this.pathMatcher && this.pathMatcher.notContains(fileName)) {
+    if (new CLIEngine({}).isPathIgnored(fileName)) {
       return [];
     }
+
     const configArray = this.configProvider.getConfigArrayForFile(fileName);
     const configFileContent = configArray.extractConfig(fileName).toCompatibleObjectAsConfigFileContent();
-    if (!configFileContent.parser || !/@typescript-eslint\/parser/.test(configFileContent.parser)) {
+    if (
+      !configFileContent.parser ||
+      ((readPkgUp.sync({ cwd: configFileContent.parser })?.packageJson.name ?? "") !== "@typescript-eslint/parser")) {
       throw new InvalidParserError();
     }
-    const parserOptions = configFileContent.parserOptions ? configFileContent.parserOptions : { };
+    const parserOptions = (configFileContent.parserOptions ? configFileContent.parserOptions : { }) as ParserOptions;
     const sourceCode = this.converter.convertToESLintSourceCode(sourceFile, parserOptions);
 
     // See https://github.com/eslint/eslint/blob/v6.1.0/lib/linter/linter.js#L1130

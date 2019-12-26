@@ -2,18 +2,12 @@
   "name": "ts-recommended",
   "private": true,
   "scripts": {
-    "clean-plugin": "rimraf node_modules/typescript-eslint-language-service && mkdirp node_modules/typescript-eslint-language-service/lib",
-    "copy-plugin": "npm run clean-plugin && cpy \"../../../lib\" node_modules/typescript-eslint-language-service/lib && cpy ../../../package.json node_modules/typescript-eslint-language-service",
-    "postinstall": "npm run copy-plugin",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^1.13.0",
-    "@typescript-eslint/parser": "^1.12.0",
-    "cpy-cli": "^2.0.0",
-    "eslint": "^6.1.0",
-    "mkdirp": "^0.5.1",
-    "rimraf": "^2.6.3",
-    "typescript": "~3.5.3"
+    "@typescript-eslint/eslint-plugin": "^2.9.0",
+    "@typescript-eslint/parser": "^2.9.0",
+    "eslint": "^6.7.1",
+    "typescript": "^3.7.2"
   }
 }

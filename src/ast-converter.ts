@@ -245,7 +245,7 @@ export class AstConverter {
         visitorKeys: visitorKeys as SourceCode.VisitorKeys,
       };
     } catch (error) {
-      throw new Error();
+      throw error;
     }
   }
 

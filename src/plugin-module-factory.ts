@@ -4,7 +4,6 @@ import { LanguageServiceProxyBuilder } from "./language-service-proxy-builder";
 import { ESLintAdapter } from "./eslint-adapter";
 import { AstConverter } from "./ast-converter";
 import { ESLintConfigProvider } from "./eslint-config-provider";
-import { ESLintIgnoredPathsMatcher } from "./path-matcher";
 import { TS_LANGSERVICE_ESLINT_DIAGNOSTIC_ERROR_CODE } from "./consts";
 
 function create(info: ts.server.PluginCreateInfo): ts.LanguageService {
@@ -13,7 +12,7 @@ function create(info: ts.server.PluginCreateInfo): ts.LanguageService {
   const projectDir = path.dirname(project.getProjectName());
   const logger = (msg: string) => project.projectService.logger.info(`[typescript-eslint-language-service] ${msg}`);
 
-  logger("config: " + pluginConfigObj);
+  logger("config: " + JSON.stringify(pluginConfigObj));
 
   let watchDirs: string[];
   if (Array.isArray(pluginConfigObj.watchDirs)) {
@@ -39,15 +38,10 @@ function create(info: ts.server.PluginCreateInfo): ts.LanguageService {
     host: serverHost,
   });
 
-  const pathMatcher = new ESLintIgnoredPathsMatcher({
-    projectDir,
-  });
-
   const adapter = new ESLintAdapter({
     logger,
     converter,
     configProvider,
-    pathMatcher,
     getSourceFile(fileName: string) {
       return getProgram().getSourceFile(fileName);
     },
