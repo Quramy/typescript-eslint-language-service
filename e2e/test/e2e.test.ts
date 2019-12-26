@@ -14,6 +14,12 @@ function findCommandResponse(responses: any[], commandName: string) {
 function maskFileNameForDiagnostics(result: ts.server.protocol.DiagnosticEvent) {
   if (!result.body) return result;
   result.body.file = "<file>";
+  // NOTE: For CI
+  result.body.diagnostics = result.body.diagnostics.map(d => {
+    d.end.offset = -1;
+    d.start.offset = -1;
+    return d;
+  });
   return result;
 }
 
@@ -21,6 +27,7 @@ function maskFileNameForCodeFixes(response: ts.server.protocol.CodeFixResponse) 
   if (!response.body) return response;
   response.body = response.body.map(b => {
     b.fixName = "<fileName>";
+    b.description = b.description.toLowerCase(); // For CI
     b.changes = b.changes.map(c => {
       c.fileName = "<fileName>";
       return c;
