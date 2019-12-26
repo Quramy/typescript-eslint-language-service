@@ -1,6 +1,6 @@
 {
   "name": "typescript-eslint-language-service",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "TypeScript language service plugin for ESLint",
   "main": "lib/index.js",
   "scripts": {
@@ -25,9 +25,9 @@
     "url": "https://github.com/Quramy/typescript-eslint-language-service/issues"
   },
   "pperDependencies": {
-    "@typescript-eslint/parser": "^2.8.0",	
-    "@typescript-eslint/typescript-estree": "^2.8.0",	
-    "eslint": "^6.7.0",	
+    "@typescript-eslint/parser": "^2.8.0",
+    "@typescript-eslint/typescript-estree": "^2.8.0",
+    "eslint": "^6.7.0",
     "typescript": "^2.3.0 || ^3.0.0"
   },
   "homepage": "https://github.com/Quramy/typescript-eslint-language-service#readme",
