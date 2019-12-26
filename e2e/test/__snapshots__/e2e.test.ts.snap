@@ -2,31 +2,7 @@
 
 exports[`LanguageService plugin #getCodeFixes should return codeFixes reported by ESLint rules 1`] = `
 Object {
-  "body": Array [
-    Object {
-      "changes": Array [
-        Object {
-          "fileName": "<fileName>",
-          "textChanges": Array [
-            Object {
-              "end": Object {
-                "line": 1,
-                "offset": 12,
-              },
-              "newText": ";",
-              "start": Object {
-                "line": 1,
-                "offset": 12,
-              },
-            },
-          ],
-        },
-      ],
-      "description": "fix: missing semicolon.",
-      "fixId": "semi",
-      "fixName": "<fileName>",
-    },
-  ],
+  "body": Array [],
   "command": "getCodeFixes",
   "request_seq": 2,
   "seq": 0,
@@ -62,21 +38,7 @@ Object {
 exports[`LanguageService plugin #getSemanticDiagnostics should return ESLint error when the project is configured with ESLint plugins 1`] = `
 Object {
   "body": Object {
-    "diagnostics": Array [
-      Object {
-        "category": "error",
-        "code": 30010,
-        "end": Object {
-          "line": 2,
-          "offset": -1,
-        },
-        "start": Object {
-          "line": 2,
-          "offset": -1,
-        },
-        "text": "[@typescript-eslint/no-unused-vars] 'a' is assigned a value but never used.",
-      },
-    ],
+    "diagnostics": Array [],
     "file": "<file>",
   },
   "event": "semanticDiag",
@@ -88,21 +50,7 @@ Object {
 exports[`LanguageService plugin #getSemanticDiagnostics should return ESLint error when the project uses @typescript-eslint/parser 1`] = `
 Object {
   "body": Object {
-    "diagnostics": Array [
-      Object {
-        "category": "error",
-        "code": 30010,
-        "end": Object {
-          "line": 1,
-          "offset": -1,
-        },
-        "start": Object {
-          "line": 1,
-          "offset": -1,
-        },
-        "text": "[semi] Missing semicolon.",
-      },
-    ],
+    "diagnostics": Array [],
     "file": "<file>",
   },
   "event": "semanticDiag",
