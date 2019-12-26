@@ -22,7 +22,7 @@ Object {
           ],
         },
       ],
-      "description": "fix: missing semicolon.",
+      "description": "Fix: Missing semicolon.",
       "fixId": "semi",
       "fixName": "<fileName>",
     },
@@ -68,11 +68,11 @@ Object {
         "code": 30010,
         "end": Object {
           "line": 2,
-          "offset": -1,
+          "offset": 10,
         },
         "start": Object {
           "line": 2,
-          "offset": -1,
+          "offset": 9,
         },
         "text": "[@typescript-eslint/no-unused-vars] 'a' is assigned a value but never used.",
       },
@@ -94,11 +94,11 @@ Object {
         "code": 30010,
         "end": Object {
           "line": 1,
-          "offset": -1,
+          "offset": 13,
         },
         "start": Object {
           "line": 1,
-          "offset": -1,
+          "offset": 12,
         },
         "text": "[semi] Missing semicolon.",
       },
