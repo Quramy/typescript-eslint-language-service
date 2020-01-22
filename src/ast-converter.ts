@@ -17,6 +17,7 @@ function validateBoolean(value: boolean | undefined, fallback = false): boolean 
 
 function createExtra(code: string) {
   const base: Extra = {
+    debugLevel: new Set(),
     tokens: null,
     range: false,
     loc: false,
