@@ -39,10 +39,11 @@
     "@typescript-eslint/parser": "^2.17.0",
     "@typescript-eslint/typescript-estree": "^2.17.0",
     "eslint": "^6.7.0",
+    "fretted-strings": "^1.0.0",
     "jest": "^24.9.0",
     "rimraf": "^3.0.0",
     "ts-jest": "^24.2.0",
-    "typescript": "^3.7.2"
+    "typescript": "~3.7.2"
   },
   "jest": {
     "transform": {

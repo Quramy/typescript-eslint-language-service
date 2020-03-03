@@ -16,7 +16,7 @@ Array [
             "newText": "\\"use strict\\"",
             "span": Object {
               "length": 12,
-              "start": 0,
+              "start": 11,
             },
           },
         ],

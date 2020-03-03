@@ -1,5 +1,6 @@
 import path from "path";
 import ts from "typescript";
+import { mark, Frets } from "fretted-strings";
 import { AstConverter } from "./ast-converter";
 import { ESLintAdapter } from "./eslint-adapter";
 import { ConfigProvider } from "./eslint-config-provider";
@@ -52,13 +53,22 @@ describe("ESLintAdapter", () => {
       configProvider.conf.rules = {
         quotes: [2, "double"],
       };
+      const frets: Frets = {};
+      const content = mark(
+        `
+          'use strict';     
+     %%%  ^           ^   %%%
+     %%%  p1          p2  %%%
+        `,
+        frets,
+      );
       const adapter = new ESLintAdapter({
         converter: new AstConverter(),
-        getSourceFile: () => ts.createSourceFile("main.ts", "'use strict';", ts.ScriptTarget.ESNext, true),
+        getSourceFile: () => ts.createSourceFile("main.ts", content, ts.ScriptTarget.ESNext, true),
         configProvider,
         logger: () => { },
       });
-      const codeFixes = adapter.getCodeFixesAtPosition(() => [], "main.ts", 0, 12, [], { }, { });
+      const codeFixes = adapter.getCodeFixesAtPosition(() => [], "main.ts", frets.p1.pos, frets.p2.pos, [], { }, { });
       expect(codeFixes).toMatchSnapshot();
     });
 
@@ -67,13 +77,24 @@ describe("ESLintAdapter", () => {
       configProvider.conf.rules = {
         quotes: [2, "double"],
       };
+      const frets: Frets = {};
+      const content = mark(
+        `
+          'use strict';     
+
+          const hoge = 1;
+     %%%  ^             ^   %%%
+     %%%  p1            p2  %%%
+        `,
+        frets,
+      );
       const adapter = new ESLintAdapter({
         converter: new AstConverter(),
-        getSourceFile: () => ts.createSourceFile("main.ts", "'use strict';\n\nconst hoge = 1;", ts.ScriptTarget.ESNext, true),
+        getSourceFile: () => ts.createSourceFile("main.ts", content, ts.ScriptTarget.ESNext, true),
         configProvider,
         logger: () => { },
       });
-      const codeFixes = adapter.getCodeFixesAtPosition(() => [], "main.ts", 17, 30, [TS_LANGSERVICE_ESLINT_DIAGNOSTIC_ERROR_CODE], { }, { });
+      const codeFixes = adapter.getCodeFixesAtPosition(() => [], "main.ts", frets.p1.pos, frets.p2.pos, [TS_LANGSERVICE_ESLINT_DIAGNOSTIC_ERROR_CODE], { }, { });
       expect(codeFixes).toMatchSnapshot();
     });
 
@@ -82,13 +103,22 @@ describe("ESLintAdapter", () => {
       configProvider.conf.rules = {
         quotes: [2, "double"],
       };
+      const frets: Frets = {};
+      const content = mark(
+        `
+          'use strict';     
+     %%%  ^           ^   %%%
+     %%%  p1          p2  %%%
+        `,
+        frets,
+      );
       const adapter = new ESLintAdapter({
         converter: new AstConverter(),
-        getSourceFile: () => ts.createSourceFile("main.ts", "'use strict';", ts.ScriptTarget.ESNext, true),
+        getSourceFile: () => ts.createSourceFile("main.ts", content, ts.ScriptTarget.ESNext, true),
         configProvider,
         logger: () => { },
       });
-      const codeFixes = adapter.getCodeFixesAtPosition(() => [], "main.ts", 0, 12, [TS_LANGSERVICE_ESLINT_DIAGNOSTIC_ERROR_CODE], { }, { });
+      const codeFixes = adapter.getCodeFixesAtPosition(() => [], "main.ts", frets.p1.pos, frets.p2.pos, [TS_LANGSERVICE_ESLINT_DIAGNOSTIC_ERROR_CODE], { }, { });
       expect(codeFixes).toMatchSnapshot();
     });
   });
