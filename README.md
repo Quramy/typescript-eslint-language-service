@@ -19,8 +19,8 @@ TypeScript language service plugin to check ESLint errors.
 ### Requirements (peer dependencies)
 
 - `typescript`
-- `@typescpt-eslint/parser`
-- `@typescpt-eslint/typescript-estree`
+- `@typescript-eslint/parser`
+- `@typescript-eslint/typescript-estree`
 - `eslint`
 
 ### Install
