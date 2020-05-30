@@ -6,7 +6,7 @@ import { ESLintConfigProvider } from "./eslint-config-provider";
 const fixtureDirPath = path.resolve(__dirname, "../test-fixtures/eslnt-config-provider");
 
 function readFile(path: string, encoding: string) {
-  return fs.readFileSync(path, { encoding });
+  return fs.readFileSync(path, { encoding: encoding as BufferEncoding });
 }
 
 class FileUpdater {
