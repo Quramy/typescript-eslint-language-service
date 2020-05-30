@@ -168,7 +168,7 @@ export class AstConverter {
     const shouldProvideParserServices = extra.projects && extra.projects.length > 0;
 
     // Note: astConverter is an internal API
-    const convert = TsEstree.astConverter
+    const convert = TsEstree.astConverter;
     const { estree, astMaps } = convert(src, extra, true);
 
     /**

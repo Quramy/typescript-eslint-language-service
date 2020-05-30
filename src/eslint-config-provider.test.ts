@@ -7,7 +7,7 @@ const fixtureDirPath = path.resolve(__dirname, "../test-fixtures/eslnt-config-pr
 
 function readFile(path: string, encoding: string) {
   return fs.readFileSync(path, { encoding });
-};
+}
 
 class FileUpdater {
   public path!: string;
