@@ -64,6 +64,10 @@ type PluginOptions = {
 
 By default, this plugins watches only `.eslintrc.*` files that exist in your project root directory. If you want to watch other directories, add their names.
 
+### Tips
+
+- Set `TS_ESLINT_SERVICE_DISABLED` env parameter and restart your IDE to turn this plugin off.
+
 ## LICENSE
 
 MIT

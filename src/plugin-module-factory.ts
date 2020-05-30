@@ -7,6 +7,8 @@ import { ESLintConfigProvider } from "./eslint-config-provider";
 import { TS_LANGSERVICE_ESLINT_DIAGNOSTIC_ERROR_CODE } from "./consts";
 
 function create(info: ts.server.PluginCreateInfo): ts.LanguageService {
+  if (!!process.env["TS_ESLINT_SERVICE_DISABLED"]) return info.languageService;
+
   const { languageService, serverHost, project, config: pluginConfigObj } = info;
 
   const projectDir = path.dirname(project.getProjectName());
