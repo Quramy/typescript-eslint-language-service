@@ -1,6 +1,6 @@
 # typescript-eslint-language-service
 
-[![CircleCI](https://circleci.com/gh/Quramy/typescript-eslint-language-service.svg?style=svg)](https://circleci.com/gh/Quramy/typescript-eslint-language-service)
+[![github actions](https://github.com/Quramy/ts-graphql-plugin/workflows/build/badge.svg)](https://github.com/Quramy/ts-graphql-plugin/actions)
 [![npm version](https://badge.fury.io/js/typescript-eslint-language-service.svg)](https://badge.fury.io/js/typescript-eslint-language-service)
 ![deps](https://david-dm.org/quramy/typescript-eslint-language-service.svg)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/Quramy/ts-graphql-plugin/master/LICENSE.txt)
