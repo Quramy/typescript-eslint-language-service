@@ -23,7 +23,7 @@ TypeScript language service plugin to check ESLint errors.
 - `@typescript-eslint/typescript-estree` >= 3.0.0
 - `eslint`
 
-** If you use `@typescript-eslint/**`< 3.0.0, install`typescript-eslint-language-service@2.x.x` .\*\*
+**If your @typescript-eslint tool's version is < 3.0.0, install`typescript-eslint-language-service@2.x.x`.**
 
 ### Install
 
