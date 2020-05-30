@@ -28,6 +28,8 @@ function filterSourceFileFromDiagnosticList(diagnostics: ts.Diagnostic[]) {
   });
 }
 
+const getProgram = () => ({ } as any as ts.Program);
+
 describe("ESLintAdapter", () => {
   describe("#getSemanticDiagnostics", () => {
     it("shuld return ESLint verification result as TypeScript diagnostic format", () => {
@@ -36,7 +38,9 @@ describe("ESLintAdapter", () => {
         semi: 2,
       };
       const adapter = new ESLintAdapter({
-        converter: new AstConverter(),
+        converter: new AstConverter({
+          getProgram,
+        }),
         getSourceFile: () => ts.createSourceFile("main.ts", "const x = 1", ts.ScriptTarget.ESNext, true),
         configProvider,
         logger: () => { },
@@ -63,7 +67,9 @@ describe("ESLintAdapter", () => {
         frets,
       );
       const adapter = new ESLintAdapter({
-        converter: new AstConverter(),
+        converter: new AstConverter({
+          getProgram,
+        }),
         getSourceFile: () => ts.createSourceFile("main.ts", content, ts.ScriptTarget.ESNext, true),
         configProvider,
         logger: () => { },
@@ -89,7 +95,9 @@ describe("ESLintAdapter", () => {
         frets,
       );
       const adapter = new ESLintAdapter({
-        converter: new AstConverter(),
+        converter: new AstConverter({
+          getProgram,
+        }),
         getSourceFile: () => ts.createSourceFile("main.ts", content, ts.ScriptTarget.ESNext, true),
         configProvider,
         logger: () => { },
@@ -113,7 +121,9 @@ describe("ESLintAdapter", () => {
         frets,
       );
       const adapter = new ESLintAdapter({
-        converter: new AstConverter(),
+        converter: new AstConverter({
+          getProgram,
+        }),
         getSourceFile: () => ts.createSourceFile("main.ts", content, ts.ScriptTarget.ESNext, true),
         configProvider,
         logger: () => { },

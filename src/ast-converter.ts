@@ -3,7 +3,6 @@ import { SourceCode, AST, Scope } from "eslint";
 import { ParserOptions } from "@typescript-eslint/parser";
 import { analyzeScope } from "@typescript-eslint/parser/dist/analyze-scope";
 import { Extra } from "@typescript-eslint/typescript-estree/dist/parser-options";
-import { simpleTraverse } from "@typescript-eslint/typescript-estree/dist/simple-traverse";
 import { visitorKeys } from "@typescript-eslint/typescript-estree/dist/visitor-keys";
 import { ParseAndGenerateServicesResult, TSESTreeOptions } from "@typescript-eslint/typescript-estree";
 import * as TsEstree from "@typescript-eslint/typescript-estree/dist/ast-converter";
@@ -19,8 +18,8 @@ function createExtra(code: string) {
   const base: Extra = {
     debugLevel: new Set(),
     tokens: null,
-    range: false,
-    loc: false,
+    range: true,
+    loc: true,
     comment: false,
     comments: [],
     strict: false,
@@ -48,11 +47,8 @@ function createExtra(code: string) {
 }
 
 function applyParserOptionsToExtra(extra: Extra, options: TSESTreeOptions) {
-  /**
-   * Track range information in the AST
-   */
-  extra.range = typeof options.range === "boolean" && options.range;
-  extra.loc = typeof options.loc === "boolean" && options.loc;
+  extra.range = typeof options.range === "boolean" ? options.range : extra.range;
+  extra.loc = typeof options.loc === "boolean" ? options.loc : extra.range;
   /**
    * Track tokens in the AST
    */
@@ -98,7 +94,7 @@ function applyParserOptionsToExtra(extra: Extra, options: TSESTreeOptions) {
   if (typeof options.loggerFn === "function") {
     extra.log = options.loggerFn;
   } else if (options.loggerFn === false) {
-    extra.log = Function.prototype;
+    extra.log = Function.prototype as any;
   }
 
   if (typeof options.project === "string") {
@@ -137,14 +133,14 @@ function applyParserOptionsToExtra(extra: Extra, options: TSESTreeOptions) {
 }
 
 export type AstConverterCreateOptions = {
-  getProgram?: () => ts.Program;
+  getProgram: () => ts.Program;
 };
 
 export class AstConverter {
 
-  private readonly getProgram?: () => ts.Program;
+  private readonly getProgram: () => ts.Program;
 
-  public constructor({ getProgram }: AstConverterCreateOptions = { }) {
+  public constructor({ getProgram }: AstConverterCreateOptions) {
     this.getProgram = getProgram;
   }
 
@@ -169,12 +165,10 @@ export class AstConverter {
       }
     }
 
-    // Note:
-    //
-    // astConverter is an internal API and it has changed from default exported function to named exported one via 1.x -> 2.x
-    //
-    // See also https://github.com/typescript-eslint/typescript-eslint/pull/535/files#diff-45d8ff2254adb960ab07ac35ada146a8L7
-    const convert = TsEstree.astConverter || (TsEstree as any).default as typeof TsEstree.astConverter;
+    const shouldProvideParserServices = extra.projects && extra.projects.length > 0;
+
+    // Note: astConverter is an internal API
+    const convert = TsEstree.astConverter
     const { estree, astMaps } = convert(src, extra, true);
 
     /**
@@ -183,9 +177,10 @@ export class AstConverter {
     const ret: ParseAndGenerateServicesResult<any> = {
       ast: estree,
       services: {
-        program: this.getProgram && this.getProgram(),
-        esTreeNodeToTSNodeMap: astMaps ? astMaps.esTreeNodeToTSNodeMap : undefined,
-        tsNodeToESTreeNodeMap: astMaps ? astMaps.tsNodeToESTreeNodeMap : undefined,
+        program: this.getProgram(),
+        hasFullTypeInformation: shouldProvideParserServices,
+        esTreeNodeToTSNodeMap: astMaps.esTreeNodeToTSNodeMap,
+        tsNodeToESTreeNodeMap: astMaps.tsNodeToESTreeNodeMap,
       },
     };
     return ret;
@@ -221,21 +216,21 @@ export class AstConverter {
         }
       }
 
-      const { ast, services } = this.parseAndGenerateServices(src, parserOptions);
 
-      simpleTraverse(ast, {
-        enter(node) {
-          switch (node.type) {
-            // Function#body cannot be null in ESTree spec.
-            case "FunctionExpression":
-              if (!node.body) {
-                node.type = `TSEmptyBody${node.type}` as any;
-              }
-              break;
-            // no default
-          }
-        },
-      });
+      /**
+       * Allow the user to suppress the warning from typescript-estree if they are using an unsupported
+       * version of TypeScript
+       */
+      const warnOnUnsupportedTypeScriptVersion = validateBoolean(
+        options.warnOnUnsupportedTypeScriptVersion,
+        true,
+      );
+      if (!warnOnUnsupportedTypeScriptVersion) {
+        parserOptions.loggerFn = false;
+      }
+
+      const { ast, services } = this.parseAndGenerateServices(src, parserOptions);
+      ast.sourceType = options.sourceType;
 
       const scopeManager = analyzeScope(ast, parserOptions);
 
