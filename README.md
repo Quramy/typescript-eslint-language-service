@@ -1,6 +1,6 @@
 # typescript-eslint-language-service
 
-[![CircleCI](https://circleci.com/gh/Quramy/typescript-eslint-language-service.svg?style=svg)](https://circleci.com/gh/Quramy/typescript-eslint-language-service)
+[![github actions](https://github.com/Quramy/typescript-eslint-language-service/workflows/build/badge.svg)](https://github.com/Quramy/typescript-eslint-language-service/actions)
 [![npm version](https://badge.fury.io/js/typescript-eslint-language-service.svg)](https://badge.fury.io/js/typescript-eslint-language-service)
 ![deps](https://david-dm.org/quramy/typescript-eslint-language-service.svg)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/Quramy/ts-graphql-plugin/master/LICENSE.txt)
@@ -19,9 +19,11 @@ TypeScript language service plugin to check ESLint errors.
 ### Requirements (peer dependencies)
 
 - `typescript`
-- `@typescript-eslint/parser`
-- `@typescript-eslint/typescript-estree`
+- `@typescript-eslint/parser` >= 3.0.0
+- `@typescript-eslint/typescript-estree` >= 3.0.0
 - `eslint`
+
+** If you use `@typescript-eslint/**`< 3.0.0, install`typescript-eslint-language-service@2.x.x` .\*\*
 
 ### Install
 
@@ -53,7 +55,7 @@ It's ready to go. Launch your TypeScript IDE.
 
 ```ts
 type PluginOptions = {
-  name: "typescript-eslint-language-service",
+  name: "typescript-eslint-language-service";
   watchDirs?: string[];
 };
 ```
@@ -63,4 +65,5 @@ type PluginOptions = {
 By default, this plugins watches only `.eslintrc.*` files that exist in your project root directory. If you want to watch other directories, add their names.
 
 ## LICENSE
+
 MIT

@@ -7,7 +7,7 @@ const fixtureDirPath = path.resolve(__dirname, "../test-fixtures/eslnt-config-pr
 
 function readFile(path: string, encoding: string) {
   return fs.readFileSync(path, { encoding });
-};
+}
 
 class FileUpdater {
   public path!: string;
@@ -24,9 +24,11 @@ class FileUpdater {
     if (this.originalContent) {
       const newContent = replace(this.originalContent);
       fs.writeFileSync(this.path, newContent, "utf8");
-      this.callbackList.filter(({ path }) => this.path === path).forEach(({ callback }) => {
-        callback(this.path, ts.FileWatcherEventKind.Changed);
-      });
+      this.callbackList
+        .filter(({ path }) => this.path === path)
+        .forEach(({ callback }) => {
+          callback(this.path, ts.FileWatcherEventKind.Changed);
+        });
     }
   }
 
@@ -44,17 +46,15 @@ class FileUpdater {
       watchFile: (path: string, callback: ts.FileWatcherCallback) => {
         this.callbackList.push({ path, callback });
         return {
-          close: () => { },
+          close: () => {},
         } as ts.FileWatcher;
-      }
+      },
     };
   }
 }
 
 describe("ESLintConfigProvider", () => {
-
   describe("#getConfigForFile", () => {
-
     const fileUpdater = new FileUpdater();
 
     afterEach(() => fileUpdater.reset());
@@ -107,5 +107,4 @@ describe("ESLintConfigProvider", () => {
       expect(configAfterChanges.rules).toEqual({ curly: ["error"], semi: ["error"] });
     });
   });
-
 });

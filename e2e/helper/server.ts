@@ -8,7 +8,6 @@ export type Options = {
 };
 
 export class TSServer {
-
   private readonly _projectPath: string;
   private readonly _responseEventEmitter: EventEmitter;
   private readonly _responseCommandEmitter: EventEmitter;
@@ -34,7 +33,7 @@ export class TSServer {
     });
     server.stdout!.setEncoding("utf-8");
     server.stdout!.on("data", data => {
-      const [,, res] = data.split("\n");
+      const [, , res] = data.split("\n");
       const obj = JSON.parse(res);
       if (obj.type === "event") {
         this._responseEventEmitter.emit(obj.event, obj);

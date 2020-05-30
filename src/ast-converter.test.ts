@@ -6,8 +6,7 @@ import { visitorKeys as tsEslintVisitorKeys } from "@typescript-eslint/typescrip
 function createProgram() {
   return ts.createProgram({
     rootNames: [],
-    options: {
-    },
+    options: {},
   });
 }
 
@@ -16,7 +15,7 @@ describe("AstConverter", () => {
     it("should create ESLint SourceCode insntance from TypeScript sourcefile", () => {
       const astConverter = new AstConverter({ getProgram: () => createProgram() });
       const sourceFile = ts.createSourceFile("test.ts", "const a = 1", ts.ScriptTarget.ESNext, true, ts.ScriptKind.TS);
-      const actual = astConverter.convertToESLintSourceCode(sourceFile, { });
+      const actual = astConverter.convertToESLintSourceCode(sourceFile, {});
       expect(actual).toBeInstanceOf(SourceCode);
       expect(actual.visitorKeys).toEqual(tsEslintVisitorKeys);
     });

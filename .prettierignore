@@ -1,0 +1,8 @@
+dist/
+lib/
+project-fixtures/
+__snapshots__/
+coverage/
+e2e/projects
+*.sh
+.gitignore

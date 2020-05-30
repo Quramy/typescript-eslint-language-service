@@ -26,6 +26,7 @@ declare module "eslint/lib/cli-engine/config-array/config-array" {
 }
 
 declare module "eslint/lib/cli-engine/cascading-config-array-factory" {
+  // eslint-disable-next-line
   import { InternalConfig } from "eslint/lib/cli-engine/config-array/extracted-config";
   import { ConfigArray } from "eslint/lib/cli-engine/config-array/config-array";
 

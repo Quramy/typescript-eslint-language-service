@@ -16,7 +16,9 @@ function create(info: ts.server.PluginCreateInfo): ts.LanguageService {
 
   let watchDirs: string[];
   if (Array.isArray(pluginConfigObj.watchDirs)) {
-    watchDirs = (pluginConfigObj.watchDirs as any[]).filter(x => typeof x === "string").map(x => path.resolve(projectDir, x));
+    watchDirs = (pluginConfigObj.watchDirs as any[])
+      .filter(x => typeof x === "string")
+      .map(x => path.resolve(projectDir, x));
   } else {
     watchDirs = [projectDir];
   }
@@ -50,14 +52,11 @@ function create(info: ts.server.PluginCreateInfo): ts.LanguageService {
   const proxy = new LanguageServiceProxyBuilder(info)
     .wrap("getSemanticDiagnostics", delegate => adapter.getSemanticDiagnostics.bind(adapter, delegate))
     .wrap("getCodeFixesAtPosition", delegate => adapter.getCodeFixesAtPosition.bind(adapter, delegate))
-    .build()
-  ;
-
+    .build();
   return proxy;
 }
 
 export const pluginModuleFactory: ts.server.PluginModuleFactory = ({ typescript }: { typescript: typeof ts }) => {
-
   // NOTE
   // Now ts.LanguageService does not exported method to get supported fixable codes.
   // So I monkey-patche to override ts.getSupportedCodeFixes til https://github.com/microsoft/TypeScript/pull/29010 is merged.

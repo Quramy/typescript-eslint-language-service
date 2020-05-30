@@ -3,14 +3,6 @@
     "^.+\\.ts$": "ts-jest"
   },
   "testRegex": "(test/.*|(src/.*\\.test))\\.ts$",
-  "testPathIgnorePatterns": [
-    "/node_modules/",
-    "helper/.*",
-    "\\.d\\.ts$"
-  ],
-  "moduleFileExtensions": [
-    "js",
-    "ts",
-    "json"
-  ]
+  "testPathIgnorePatterns": ["/node_modules/", "helper/.*", "\\.d\\.ts$"],
+  "moduleFileExtensions": ["js", "ts", "json"]
 }

@@ -7,21 +7,26 @@ import { ConfigProvider } from "./eslint-config-provider";
 import { TS_LANGSERVICE_ESLINT_DIAGNOSTIC_ERROR_CODE } from "./consts";
 import { ParserOptions } from "@typescript-eslint/parser";
 
-export function translateToDiagnosticsFromESLintResult(result: Linter.LintMessage[], sourceFile: ts.SourceFile): ts.Diagnostic[] {
-  return result.map(({ message, severity, ruleId, line, column, endLine, endColumn })=> {
+export function translateToDiagnosticsFromESLintResult(
+  result: Linter.LintMessage[],
+  sourceFile: ts.SourceFile,
+): ts.Diagnostic[] {
+  return result.map(({ message, severity, ruleId, line, column, endLine, endColumn }) => {
     const messageText = `[${ruleId}] ${message}`;
 
-    const category: ts.DiagnosticCategory = 
-      severity === 2 ? ts.DiagnosticCategory.Error :
-        severity === 1 ? ts.DiagnosticCategory.Warning :
-          ts.DiagnosticCategory.Suggestion;
+    const category: ts.DiagnosticCategory =
+      severity === 2
+        ? ts.DiagnosticCategory.Error
+        : severity === 1
+        ? ts.DiagnosticCategory.Warning
+        : ts.DiagnosticCategory.Suggestion;
 
     /**
      * ESLint uses 1-started index. On the other hand, TypeScript 0-started index.
      * So we should minus from ESLint result's row/column to create TypeScript position.
      */
     const start = ts.getPositionOfLineAndCharacter(sourceFile, line - 1, column - 1);
-    const end = endLine && endColumn ? ts.getPositionOfLineAndCharacter(sourceFile, endLine - 1, endColumn -1) : start;
+    const end = endLine && endColumn ? ts.getPositionOfLineAndCharacter(sourceFile, endLine - 1, endColumn - 1) : start;
     const length = Math.max(0, end - start);
 
     const diagnostic: ts.Diagnostic = {
@@ -37,14 +42,21 @@ export function translateToDiagnosticsFromESLintResult(result: Linter.LintMessag
   });
 }
 
-export function isIntersect(message: Linter.LintMessage, range: { start: number; end: number }, sourceFile: ts.SourceFile) {
+export function isIntersect(
+  message: Linter.LintMessage,
+  range: { start: number; end: number },
+  sourceFile: ts.SourceFile,
+) {
   const { line, column, endLine, endColumn } = message;
   const mStart = ts.getPositionOfLineAndCharacter(sourceFile, line - 1, column - 1);
-  const mEnd = endLine && endColumn ? ts.getPositionOfLineAndCharacter(sourceFile, endLine - 1, endColumn -1) : mStart;
+  const mEnd = endLine && endColumn ? ts.getPositionOfLineAndCharacter(sourceFile, endLine - 1, endColumn - 1) : mStart;
   return !(mEnd < range.start || mStart > range.end);
 }
 
-export function translateToCodeFixesFromESLintResult(result: Linter.LintMessage[], fileName: string): ts.CodeFixAction[] {
+export function translateToCodeFixesFromESLintResult(
+  result: Linter.LintMessage[],
+  fileName: string,
+): ts.CodeFixAction[] {
   return result.reduce((acc, { message, ruleId, fix }) => {
     if (!fix) {
       return acc;
@@ -56,17 +68,21 @@ export function translateToCodeFixesFromESLintResult(result: Linter.LintMessage[
       description: `Fix: ${message}`,
       fixId: rid,
       fixName: rid,
-      changes: [{
-        fileName,
-        isNewFile: false,
-        textChanges: [{
-          span: {
-            start: rangeStart,
-            length: rangeLength,
-          },
-          newText: fix.text,
-        }],
-      }]
+      changes: [
+        {
+          fileName,
+          isNewFile: false,
+          textChanges: [
+            {
+              span: {
+                start: rangeStart,
+                length: rangeLength,
+              },
+              newText: fix.text,
+            },
+          ],
+        },
+      ],
     };
     return [...acc, codeFixAction];
   }, [] as ts.CodeFixAction[]);
@@ -86,12 +102,7 @@ export class ESLintAdapter {
   private readonly configProvider: ConfigProvider;
   private readonly getSourceFile: (fileName: string) => ts.SourceFile | undefined;
 
-  public constructor({
-    logger,
-    converter,
-    configProvider,
-    getSourceFile,
-  }: ESLintAdapterOptions) {
+  public constructor({ logger, converter, configProvider, getSourceFile }: ESLintAdapterOptions) {
     this.linter = new Linter();
     this.logger = logger;
     this.converter = converter;
@@ -108,17 +119,21 @@ export class ESLintAdapter {
     const configFileContent = configArray.extractConfig(fileName).toCompatibleObjectAsConfigFileContent();
     if (
       !configFileContent.parser ||
-      ((readPkgUp.sync({ cwd: configFileContent.parser })?.packageJson.name ?? "") !== "@typescript-eslint/parser")) {
+      (readPkgUp.sync({ cwd: configFileContent.parser })?.packageJson.name ?? "") !== "@typescript-eslint/parser"
+    ) {
       throw new InvalidParserError();
     }
-    const parserOptions = (configFileContent.parserOptions ? configFileContent.parserOptions : { }) as ParserOptions;
+    const parserOptions = (configFileContent.parserOptions ? configFileContent.parserOptions : {}) as ParserOptions;
     const sourceCode = this.converter.convertToESLintSourceCode(sourceFile, parserOptions);
 
     // See https://github.com/eslint/eslint/blob/v6.1.0/lib/linter/linter.js#L1130
     return this.linter.verify(sourceCode, configArray as any, { filename: fileName });
   }
 
-  public getSemanticDiagnostics(delegate: ts.LanguageService["getSemanticDiagnostics"], fileName: string): ReturnType<ts.LanguageService["getSemanticDiagnostics"]> {
+  public getSemanticDiagnostics(
+    delegate: ts.LanguageService["getSemanticDiagnostics"],
+    fileName: string,
+  ): ReturnType<ts.LanguageService["getSemanticDiagnostics"]> {
     const original = delegate(fileName);
     try {
       const sourceFile = this.getSourceFile(fileName);
@@ -134,7 +149,15 @@ export class ESLintAdapter {
     }
   }
 
-  public getCodeFixesAtPosition(delegate: ts.LanguageService["getCodeFixesAtPosition"], fileName: string, start: number, end: number, errorCodes: number[], formatOptions: ts.FormatCodeSettings, preferences: ts.UserPreferences):  ReturnType<ts.LanguageService["getCodeFixesAtPosition"]> {
+  public getCodeFixesAtPosition(
+    delegate: ts.LanguageService["getCodeFixesAtPosition"],
+    fileName: string,
+    start: number,
+    end: number,
+    errorCodes: number[],
+    formatOptions: ts.FormatCodeSettings,
+    preferences: ts.UserPreferences,
+  ): ReturnType<ts.LanguageService["getCodeFixesAtPosition"]> {
     const original = delegate(fileName, start, end, errorCodes, formatOptions, preferences);
     try {
       if (!errorCodes.includes(TS_LANGSERVICE_ESLINT_DIAGNOSTIC_ERROR_CODE)) {

@@ -1,5 +1,11 @@
 src/
-.circleci/
+.github/
+.git/
 .e2e/
+.vscode/
 test-fixtures/
 local/
+.prettierignore
+.prettierrc
+.eslintrc
+.eslintignore

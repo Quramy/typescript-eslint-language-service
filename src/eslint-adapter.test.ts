@@ -28,6 +28,8 @@ function filterSourceFileFromDiagnosticList(diagnostics: ts.Diagnostic[]) {
   });
 }
 
+const getProgram = () => (({} as any) as ts.Program);
+
 describe("ESLintAdapter", () => {
   describe("#getSemanticDiagnostics", () => {
     it("shuld return ESLint verification result as TypeScript diagnostic format", () => {
@@ -36,10 +38,12 @@ describe("ESLintAdapter", () => {
         semi: 2,
       };
       const adapter = new ESLintAdapter({
-        converter: new AstConverter(),
+        converter: new AstConverter({
+          getProgram,
+        }),
         getSourceFile: () => ts.createSourceFile("main.ts", "const x = 1", ts.ScriptTarget.ESNext, true),
         configProvider,
-        logger: () => { },
+        logger: () => {},
       });
       const diagnostics = filterSourceFileFromDiagnosticList(adapter.getSemanticDiagnostics(() => [], "main.ts"));
       expect(diagnostics).toMatchSnapshot();
@@ -47,7 +51,6 @@ describe("ESLintAdapter", () => {
   });
 
   describe("#getCodeFixesAtPosition", () => {
-
     it("shuld only delegate when input errorCodes does not include TS_LANGSERVICE_ESLINT_DIAGNOSTIC_ERROR_CODE", () => {
       const configProvider = new TestingConfigProvider();
       configProvider.conf.rules = {
@@ -63,12 +66,14 @@ describe("ESLintAdapter", () => {
         frets,
       );
       const adapter = new ESLintAdapter({
-        converter: new AstConverter(),
+        converter: new AstConverter({
+          getProgram,
+        }),
         getSourceFile: () => ts.createSourceFile("main.ts", content, ts.ScriptTarget.ESNext, true),
         configProvider,
-        logger: () => { },
+        logger: () => {},
       });
-      const codeFixes = adapter.getCodeFixesAtPosition(() => [], "main.ts", frets.p1.pos, frets.p2.pos, [], { }, { });
+      const codeFixes = adapter.getCodeFixesAtPosition(() => [], "main.ts", frets.p1.pos, frets.p2.pos, [], {}, {});
       expect(codeFixes).toMatchSnapshot();
     });
 
@@ -89,12 +94,22 @@ describe("ESLintAdapter", () => {
         frets,
       );
       const adapter = new ESLintAdapter({
-        converter: new AstConverter(),
+        converter: new AstConverter({
+          getProgram,
+        }),
         getSourceFile: () => ts.createSourceFile("main.ts", content, ts.ScriptTarget.ESNext, true),
         configProvider,
-        logger: () => { },
+        logger: () => {},
       });
-      const codeFixes = adapter.getCodeFixesAtPosition(() => [], "main.ts", frets.p1.pos, frets.p2.pos, [TS_LANGSERVICE_ESLINT_DIAGNOSTIC_ERROR_CODE], { }, { });
+      const codeFixes = adapter.getCodeFixesAtPosition(
+        () => [],
+        "main.ts",
+        frets.p1.pos,
+        frets.p2.pos,
+        [TS_LANGSERVICE_ESLINT_DIAGNOSTIC_ERROR_CODE],
+        {},
+        {},
+      );
       expect(codeFixes).toMatchSnapshot();
     });
 
@@ -113,12 +128,22 @@ describe("ESLintAdapter", () => {
         frets,
       );
       const adapter = new ESLintAdapter({
-        converter: new AstConverter(),
+        converter: new AstConverter({
+          getProgram,
+        }),
         getSourceFile: () => ts.createSourceFile("main.ts", content, ts.ScriptTarget.ESNext, true),
         configProvider,
-        logger: () => { },
+        logger: () => {},
       });
-      const codeFixes = adapter.getCodeFixesAtPosition(() => [], "main.ts", frets.p1.pos, frets.p2.pos, [TS_LANGSERVICE_ESLINT_DIAGNOSTIC_ERROR_CODE], { }, { });
+      const codeFixes = adapter.getCodeFixesAtPosition(
+        () => [],
+        "main.ts",
+        frets.p1.pos,
+        frets.p2.pos,
+        [TS_LANGSERVICE_ESLINT_DIAGNOSTIC_ERROR_CODE],
+        {},
+        {},
+      );
       expect(codeFixes).toMatchSnapshot();
     });
   });

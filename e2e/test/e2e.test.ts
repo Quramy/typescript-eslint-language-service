@@ -100,7 +100,10 @@ describe("LanguageService plugin", () => {
       const { file, fileContent } = server.readFile("./main.ts");
       server.send({ command: "open", arguments: { file, fileContent, scriptKindName: "TS" } });
       await server.waitEvent("projectLoadingFinish");
-      server.send({ command:"getCodeFixes",arguments:{ file, startLine:1, startOffset:12, endLine:1, endOffset:12, errorCodes:[30010] } });
+      server.send({
+        command: "getCodeFixes",
+        arguments: { file, startLine: 1, startOffset: 12, endLine: 1, endOffset: 12, errorCodes: [30010] },
+      });
       await server.waitResponse("getCodeFixes");
       const found = findCommandResponse(server.responses, "getCodeFixes");
       if (!found) {
@@ -109,5 +112,4 @@ describe("LanguageService plugin", () => {
       expect(maskFileNameForCodeFixes(found)).toMatchSnapshot();
     });
   });
-
 });

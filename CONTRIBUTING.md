@@ -35,4 +35,3 @@ $ yarn build
 $ ./e2e/setup.sh
 $ yarn e2e
 ```
-

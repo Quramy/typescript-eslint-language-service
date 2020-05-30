@@ -1,6 +1,6 @@
 {
   "name": "typescript-eslint-language-service",
-  "version": "2.1.8",
+  "version": "3.0.0",
   "description": "TypeScript language service plugin for ESLint",
   "main": "lib/index.js",
   "scripts": {
@@ -9,6 +9,9 @@
     "build:local": "tsc -p tsconfig.build.json --outDir local",
     "lint": "eslint \"src/**/*.ts\" \"e2e/**/*.ts\"",
     "test": "jest",
+    "prettier": "prettier \"*.md\" \"*.json\" \"*.yml\" \"src/**/*\" \"e2e/**/*\"",
+    "format": "yarn prettier --write",
+    "format:check": "yarn prettier --check",
     "e2e": "jest --config e2e/jest.config.json"
   },
   "repository": {
@@ -25,25 +28,34 @@
     "url": "https://github.com/Quramy/typescript-eslint-language-service/issues"
   },
   "pperDependencies": {
-    "@typescript-eslint/parser": ">= 2.17.0 <= 2.25.x",
-    "@typescript-eslint/typescript-estree": ">= 2.17.0 <= 2.25.x",
-    "eslint": ">= 6.7.0 <= 6.8.x",
-    "typescript": "^2.3.0 || ^3.0.0"
+    "@typescript-eslint/parser": ">= 3.0.2",
+    "@typescript-eslint/typescript-estree": ">= 3.0.2",
+    "eslint": ">= 6.7.0 <= 6.8.x || >= 7.0.0",
+    "typescript": "^3.0.0"
   },
   "homepage": "https://github.com/Quramy/typescript-eslint-language-service#readme",
   "devDependencies": {
     "@types/eslint": "^6.1.3",
     "@types/jest": "^25.1.4",
     "@types/node": "^13.9.3",
-    "@typescript-eslint/eslint-plugin": "^2.17.0",
-    "@typescript-eslint/parser": "^2.17.0",
-    "@typescript-eslint/typescript-estree": "^2.17.0",
-    "eslint": "^6.7.0",
+    "@typescript-eslint/eslint-plugin": "^3.0.2",
+    "@typescript-eslint/parser": "^3.0.2",
+    "@typescript-eslint/typescript-estree": "^3.0.2",
+    "eslint": "^7.0.0",
+    "eslint-config-prettier": "^6.11.0",
     "fretted-strings": "^1.0.0",
+    "husky": "^4.2.5",
     "jest": "^25.1.0",
+    "prettier": "^2.0.5",
+    "pretty-quick": "^2.0.1",
     "rimraf": "^3.0.0",
     "ts-jest": "^25.2.1",
-    "typescript": "~3.7.2"
+    "typescript": "~3.9.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
   },
   "jest": {
     "transform": {
