@@ -20,6 +20,7 @@ jobs:
         run: |
           yarn --frozen-lockfile
           yarn build
+          yarn format:check
           yarn lint
           yarn test
           /bin/bash e2e/setup.sh

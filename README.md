@@ -23,7 +23,7 @@ TypeScript language service plugin to check ESLint errors.
 - `@typescript-eslint/typescript-estree` >= 3.0.0
 - `eslint`
 
-** If you use `@typescript-eslint/**` < 3.0.0, install `typescript-eslint-language-service@2.x.x` .**
+** If you use `@typescript-eslint/**`< 3.0.0, install`typescript-eslint-language-service@2.x.x` .\*\*
 
 ### Install
 
@@ -55,7 +55,7 @@ It's ready to go. Launch your TypeScript IDE.
 
 ```ts
 type PluginOptions = {
-  name: "typescript-eslint-language-service",
+  name: "typescript-eslint-language-service";
   watchDirs?: string[];
 };
 ```
@@ -65,4 +65,5 @@ type PluginOptions = {
 By default, this plugins watches only `.eslintrc.*` files that exist in your project root directory. If you want to watch other directories, add their names.
 
 ## LICENSE
+
 MIT

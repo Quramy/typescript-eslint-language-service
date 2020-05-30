@@ -25,7 +25,7 @@ function createExtra(code: string) {
     strict: false,
     jsx: false,
     useJSXTextNode: false,
-    log: () => { },
+    log: () => {},
     projects: [],
     errorOnUnknownASTType: false,
     errorOnTypeScriptSyntacticAndSemanticIssues: false,
@@ -82,10 +82,7 @@ function applyParserOptionsToExtra(extra: Extra, options: TSESTreeOptions) {
    * Allow the user to cause the parser to error if it encounters an unknown AST Node Type
    * (used in testing)
    */
-  if (
-    typeof options.errorOnUnknownASTType === "boolean" &&
-    options.errorOnUnknownASTType
-  ) {
+  if (typeof options.errorOnUnknownASTType === "boolean" && options.errorOnUnknownASTType) {
     extra.errorOnUnknownASTType = true;
   }
   /**
@@ -99,10 +96,7 @@ function applyParserOptionsToExtra(extra: Extra, options: TSESTreeOptions) {
 
   if (typeof options.project === "string") {
     extra.projects = [options.project];
-  } else if (
-    Array.isArray(options.project) &&
-    options.project.every(projectPath => typeof projectPath === "string")
-  ) {
+  } else if (Array.isArray(options.project) && options.project.every(projectPath => typeof projectPath === "string")) {
     extra.projects = options.project;
   }
 
@@ -110,10 +104,7 @@ function applyParserOptionsToExtra(extra: Extra, options: TSESTreeOptions) {
     extra.tsconfigRootDir = options.tsconfigRootDir;
   }
 
-  if (
-    Array.isArray(options.extraFileExtensions) &&
-    options.extraFileExtensions.every(ext => typeof ext === "string")
-  ) {
+  if (Array.isArray(options.extraFileExtensions) && options.extraFileExtensions.every(ext => typeof ext === "string")) {
     extra.extraFileExtensions = options.extraFileExtensions;
   }
   /**
@@ -123,8 +114,7 @@ function applyParserOptionsToExtra(extra: Extra, options: TSESTreeOptions) {
    * NOTE: For backwards compatibility we also preserve node maps in the case where `project` is set,
    * and `preserveNodeMaps` is not explicitly set to anything.
    */
-  extra.preserveNodeMaps =
-    typeof options.preserveNodeMaps === "boolean" && options.preserveNodeMaps;
+  extra.preserveNodeMaps = typeof options.preserveNodeMaps === "boolean" && options.preserveNodeMaps;
   if (options.preserveNodeMaps === undefined && extra.projects.length > 0) {
     extra.preserveNodeMaps = true;
   }
@@ -137,7 +127,6 @@ export type AstConverterCreateOptions = {
 };
 
 export class AstConverter {
-
   private readonly getProgram: () => ts.Program;
 
   public constructor({ getProgram }: AstConverterCreateOptions) {
@@ -160,7 +149,10 @@ export class AstConverter {
      */
     if (typeof options !== "undefined") {
       extra = applyParserOptionsToExtra(extra, options);
-      if (typeof options.errorOnTypeScriptSyntacticAndSemanticIssues === "boolean" && options.errorOnTypeScriptSyntacticAndSemanticIssues) {
+      if (
+        typeof options.errorOnTypeScriptSyntacticAndSemanticIssues === "boolean" &&
+        options.errorOnTypeScriptSyntacticAndSemanticIssues
+      ) {
         extra.errorOnTypeScriptSyntacticAndSemanticIssues = true;
       }
     }
@@ -191,7 +183,6 @@ export class AstConverter {
    */
   public parseForESLint(src: ts.SourceFile, options?: ParserOptions | null) {
     try {
-      
       if (!options || typeof options !== "object") {
         options = {};
       }
@@ -216,15 +207,11 @@ export class AstConverter {
         }
       }
 
-
       /**
        * Allow the user to suppress the warning from typescript-estree if they are using an unsupported
        * version of TypeScript
        */
-      const warnOnUnsupportedTypeScriptVersion = validateBoolean(
-        options.warnOnUnsupportedTypeScriptVersion,
-        true,
-      );
+      const warnOnUnsupportedTypeScriptVersion = validateBoolean(options.warnOnUnsupportedTypeScriptVersion, true);
       if (!warnOnUnsupportedTypeScriptVersion) {
         parserOptions.loggerFn = false;
       }
@@ -246,7 +233,6 @@ export class AstConverter {
   }
 
   public convertToESLintSourceCode(src: ts.SourceFile, options?: ParserOptions | null) {
-
     const code = src.getFullText();
     const { ast, scopeManager, services, visitorKeys } = this.parseForESLint(src, options);
 

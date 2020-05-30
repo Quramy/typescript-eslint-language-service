@@ -3,21 +3,24 @@ env:
   node: true
   es6: true
 extends:
-  "plugin:@typescript-eslint/recommended"
+  - "plugin:@typescript-eslint/recommended"
+  - prettier
+  - "prettier/@typescript-eslint"
 parser: "@typescript-eslint/parser"
 parserOptions:
   project: "./tsconfig.json"
 plugins:
   - "@typescript-eslint"
 rules:
+  no-eval: error
+  no-debugger: error
   no-console: error
-  quotes:
-    - error
-    - double
-  semi: error
-  "@typescript-eslint/indent":
-    - error
-    - 2
+  no-duplicate-imports: error
+  no-var: error
+  no-unsafe-finally: error
+  prefer-const: error
+  prefer-rest-params: error
+  prefer-spread: error
   "@typescript-eslint/prefer-interface": off
   "@typescript-eslint/no-explicit-any": off
   "@typescript-eslint/no-non-null-assertion": off
