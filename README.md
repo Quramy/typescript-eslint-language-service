@@ -19,9 +19,11 @@ TypeScript language service plugin to check ESLint errors.
 ### Requirements (peer dependencies)
 
 - `typescript`
-- `@typescript-eslint/parser`
-- `@typescript-eslint/typescript-estree`
+- `@typescript-eslint/parser` >= 3.0.0
+- `@typescript-eslint/typescript-estree` >= 3.0.0
 - `eslint`
+
+** If you use `@typescript-eslint/**` < 3.0.0, install `typescript-eslint-language-service@2.x.x` .**
 
 ### Install
 
