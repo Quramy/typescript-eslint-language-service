@@ -28,7 +28,7 @@ TypeScript language service plugin to check ESLint errors.
 ### Install
 
 ```sh
-npm install typescript-eslint-language-service
+npm install typescript-eslint-language-service -D
 ```
 
 ### Configure
