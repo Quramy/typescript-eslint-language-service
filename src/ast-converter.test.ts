@@ -1,7 +1,7 @@
 import ts from "typescript";
 import { AstConverter } from "./ast-converter";
 import { SourceCode } from "eslint";
-import { visitorKeys as tsEslintVisitorKeys } from "@typescript-eslint/typescript-estree/dist/visitor-keys";
+import { visitorKeys as tsEslintVisitorKeys } from "@typescript-eslint/visitor-keys";
 
 function createProgram() {
   return ts.createProgram({
