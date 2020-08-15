@@ -219,7 +219,7 @@ export class AstConverter {
       const { ast, services } = this.parseAndGenerateServices(src, parserOptions);
       ast.sourceType = options.sourceType;
 
-      const scopeManager = analyzeScope(ast, parserOptions);
+      const scopeManager = analyzeScope(ast as any, parserOptions);
 
       return {
         ast: ast as AST.Program,
