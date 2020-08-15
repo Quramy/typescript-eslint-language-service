@@ -3,7 +3,7 @@ import { SourceCode, AST, Scope } from "eslint";
 import { ParserOptions } from "@typescript-eslint/parser";
 import { analyzeScope } from "@typescript-eslint/parser/dist/analyze-scope";
 import { Extra } from "@typescript-eslint/typescript-estree/dist/parser-options";
-import { visitorKeys } from "@typescript-eslint/typescript-estree/dist/visitor-keys";
+import { visitorKeys } from "@typescript-eslint/visitor-keys";
 import { ParseAndGenerateServicesResult, TSESTreeOptions } from "@typescript-eslint/typescript-estree";
 import * as TsEstree from "@typescript-eslint/typescript-estree/dist/ast-converter";
 

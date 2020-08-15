@@ -37,7 +37,7 @@ class FileUpdater {
       fs.writeFileSync(this.path, this.originalContent, "utf8");
       delete this.originalContent;
     }
-    delete this.path;
+    delete (this as any).path;
     this.callbackList = [];
   }
 
