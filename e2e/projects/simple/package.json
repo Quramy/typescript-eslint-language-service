@@ -5,8 +5,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
-    "@typescript-eslint/parser": "~3.9.0",
+    "@typescript-eslint/parser": "~4.0.0",
     "eslint": "^7.0.0",
-    "typescript": "4.0.1-rc"
+    "typescript": "~4.0.0"
   }
 }
