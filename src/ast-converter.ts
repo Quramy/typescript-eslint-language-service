@@ -1,7 +1,7 @@
 import ts from "typescript";
 import { SourceCode, AST, Scope } from "eslint";
-import { ParserOptions } from "@typescript-eslint/parser";
-import { analyzeScope } from "@typescript-eslint/parser/dist/analyze-scope";
+import { ParserOptions } from "@typescript-eslint/types";
+import { analyze, AnalyzeOptions } from "@typescript-eslint/scope-manager";
 import { Extra } from "@typescript-eslint/typescript-estree/dist/parser-options";
 import { visitorKeys } from "@typescript-eslint/visitor-keys";
 import { ParseAndGenerateServicesResult, TSESTreeOptions } from "@typescript-eslint/typescript-estree";
@@ -200,6 +200,15 @@ export class AstConverter {
         jsx: validateBoolean(options.ecmaFeatures.jsx),
       });
 
+      const analyzeOptions: AnalyzeOptions = {
+        ecmaVersion: options.ecmaVersion,
+        globalReturn: options.ecmaFeatures.globalReturn,
+        // jsxPragma: options.jsxPragma,
+        // jsxFragmentName: options.jsxFragmentName,
+        lib: options.lib,
+        sourceType: options.sourceType,
+      };
+
       if (typeof options.filePath === "string") {
         const tsx = options.filePath.endsWith(".tsx");
         if (tsx || options.filePath.endsWith(".ts")) {
@@ -219,7 +228,7 @@ export class AstConverter {
       const { ast, services } = this.parseAndGenerateServices(src, parserOptions);
       ast.sourceType = options.sourceType;
 
-      const scopeManager = analyzeScope(ast as any, parserOptions);
+      const scopeManager = analyze(ast, analyzeOptions);
 
       return {
         ast: ast as AST.Program,
