@@ -25,7 +25,7 @@ const ret = {
 console.log(JSON.stringify(ret, null, 2));
 EOF
   mv PKG package.json
-  yarn --pure-lockfile
+  yarn
   yarn link typescript-eslint-language-service
   popd
 done
