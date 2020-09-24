@@ -5,6 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "clean": "rimraf local lib",
+    "prebuild": "rimraf node_modules/@types/eslint/node_modules/estree",
     "build": "tsc -p tsconfig.build.json",
     "build:local": "tsc -p tsconfig.build.json --outDir local",
     "lint": "eslint \"src/**/*.ts\" \"e2e/**/*.ts\"",
@@ -36,6 +37,7 @@
   "homepage": "https://github.com/Quramy/typescript-eslint-language-service#readme",
   "devDependencies": {
     "@types/eslint": "7.2.3",
+    "@types/estree": "0.0.45",
     "@types/jest": "26.0.14",
     "@types/node": "14.6.4",
     "@typescript-eslint/eslint-plugin": "4.2.0",
