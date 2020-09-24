@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "clean": "rimraf local lib",
-    "prebuild": "rimraf node_modules/@types/eslint/node_modules/estree",
+    "prebuild": "rimraf node_modules/@types/eslint/node_modules/@types/estree",
     "build": "tsc -p tsconfig.build.json",
     "build:local": "tsc -p tsconfig.build.json --outDir local",
     "lint": "eslint \"src/**/*.ts\" \"e2e/**/*.ts\"",
