@@ -5,7 +5,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
-    "@babel/core": "7.11.6",
+    "@babel/core": "7.12.0",
     "babel-eslint": "10.1.0",
     "eslint": "7.11.0",
     "typescript": "4.0.3"
