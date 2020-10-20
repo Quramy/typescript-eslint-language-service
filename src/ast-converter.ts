@@ -35,6 +35,7 @@ function createExtra(code: string) {
     preserveNodeMaps: undefined,
     createDefaultProgram: false,
     filePath: "",
+    EXPERIMENTAL_useSourceOfProjectReferenceRedirect: false,
   };
   return {
     ...base,
@@ -103,6 +104,12 @@ function applyParserOptionsToExtra(extra: Extra, options: TSESTreeOptions) {
   if (typeof options.tsconfigRootDir === "string") {
     extra.tsconfigRootDir = options.tsconfigRootDir;
   }
+
+  extra.createDefaultProgram = typeof options.createDefaultProgram === "boolean" && options.createDefaultProgram;
+
+  extra.EXPERIMENTAL_useSourceOfProjectReferenceRedirect =
+    typeof options.EXPERIMENTAL_useSourceOfProjectReferenceRedirect === "boolean" &&
+    options.EXPERIMENTAL_useSourceOfProjectReferenceRedirect;
 
   if (Array.isArray(options.extraFileExtensions) && options.extraFileExtensions.every(ext => typeof ext === "string")) {
     extra.extraFileExtensions = options.extraFileExtensions;
