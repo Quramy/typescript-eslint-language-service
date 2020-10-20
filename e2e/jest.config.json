@@ -4,5 +4,6 @@
   },
   "testRegex": "(test/.*|(src/.*\\.test))\\.ts$",
   "testPathIgnorePatterns": ["/node_modules/", "helper/.*", "\\.d\\.ts$"],
-  "moduleFileExtensions": ["js", "ts", "json"]
+  "moduleFileExtensions": ["js", "ts", "json"],
+  "testTimeout": 10000
 }
