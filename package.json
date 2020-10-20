@@ -1,6 +1,6 @@
 {
   "name": "typescript-eslint-language-service",
-  "version": "4.0.1",
+  "version": "4.1.0",
   "description": "TypeScript language service plugin for ESLint",
   "main": "lib/index.js",
   "scripts": {
