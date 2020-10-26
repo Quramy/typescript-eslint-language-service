@@ -1,7 +1,23 @@
 import path from "path";
 import ts from "typescript";
-import { ConfigArray } from "eslint/lib/cli-engine/config-array/config-array";
-import { CascadingConfigArrayFactory } from "eslint/lib/cli-engine/cascading-config-array-factory";
+import type { ConfigArray } from "@eslint/eslintrc/lib/config-array/config-array";
+import type { CascadingConfigArrayFactory } from "@eslint/eslintrc/lib/cascading-config-array-factory";
+
+let _configArrayFactory: typeof CascadingConfigArrayFactory;
+function getFactroyClass() {
+  if (_configArrayFactory) return _configArrayFactory;
+  try {
+    // for ESLint >= v7.12.0
+    const p = require.resolve("@eslint/eslintrc/lib/cascading-config-array-factory");
+    _configArrayFactory = require(p).CascadingConfigArrayFactory;
+    return _configArrayFactory;
+  } catch {
+    // for ESLint < v7.12.0
+    const p = require.resolve("eslint/lib/cli-engine/cascading-config-array-factory");
+    _configArrayFactory = require(p).CascadingConfigArrayFactory;
+    return _configArrayFactory;
+  }
+}
 
 export type ConfigProviderHost = {
   readonly readFile: (fileName: string, encoding: string) => string | undefined;
@@ -32,7 +48,7 @@ export class ESLintConfigProvider implements ConfigProvider {
 
   public constructor({ host, directoriesToWatch }: ESLintConfigProviderOptions) {
     this.host = host;
-    this.factory = new CascadingConfigArrayFactory();
+    this.factory = new (getFactroyClass())();
 
     directoriesToWatch.forEach(directory => {
       ESLINTRC_SUFFIX_LIST.map(suffix => path.resolve(directory, suffix)).forEach(eslintrcFilepath => {

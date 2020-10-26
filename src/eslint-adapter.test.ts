@@ -4,7 +4,7 @@ import { mark, Frets } from "fretted-strings";
 import { AstConverter } from "./ast-converter";
 import { ESLintAdapter } from "./eslint-adapter";
 import { ConfigProvider } from "./eslint-config-provider";
-import { ConfigArray } from "eslint/lib/cli-engine/config-array/config-array";
+import { ConfigArray } from "@eslint/eslintrc/lib/config-array/config-array";
 import { TS_LANGSERVICE_ESLINT_DIAGNOSTIC_ERROR_CODE } from "./consts";
 
 class TestingConfigProvider implements ConfigProvider {
