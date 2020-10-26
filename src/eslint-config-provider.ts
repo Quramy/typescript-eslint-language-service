@@ -9,11 +9,13 @@ function getFactroyClass() {
   try {
     // for ESLint >= v7.12.0
     const p = require.resolve("@eslint/eslintrc/lib/cascading-config-array-factory");
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     _configArrayFactory = require(p).CascadingConfigArrayFactory;
     return _configArrayFactory;
   } catch {
     // for ESLint < v7.12.0
     const p = require.resolve("eslint/lib/cli-engine/cascading-config-array-factory");
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     _configArrayFactory = require(p).CascadingConfigArrayFactory;
     return _configArrayFactory;
   }
