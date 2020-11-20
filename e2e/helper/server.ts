@@ -69,15 +69,15 @@ export class TSServer {
   }
 
   public wait(time = 0) {
-    return new Promise(res => setTimeout(() => res(), time));
+    return new Promise(res => setTimeout(res, time));
   }
 
   public waitEvent(eventName: string) {
-    return new Promise(res => this._responseEventEmitter.once(eventName, () => res()));
+    return new Promise(res => this._responseEventEmitter.once(eventName, res));
   }
 
   public waitResponse(commandName: string) {
-    return new Promise(res => this._responseCommandEmitter.once(commandName, () => res()));
+    return new Promise(res => this._responseCommandEmitter.once(commandName, res));
   }
 }
 
