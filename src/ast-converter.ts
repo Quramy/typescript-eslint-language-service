@@ -95,25 +95,30 @@ function applyParserOptionsToExtra(extra: Extra, options: TSESTreeOptions) {
     extra.log = Function.prototype as any;
   }
 
-  if (typeof options.project === "string") {
-    extra.projects = [options.project];
-  } else if (Array.isArray(options.project) && options.project.every(projectPath => typeof projectPath === "string")) {
-    extra.projects = options.project;
-  }
+  // astConverter function don't use extra.projects option
+  //
+  // see https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/typescript-estree/src/ast-converter.ts
+  //
+  // if (typeof options.project === "string") {
+  //   extra.projects = [options.project];
+  // } else if (Array.isArray(options.project) && options.project.every(projectPath => typeof projectPath === "string")) {
+  //   extra.projects = options.project;
+  // }
 
-  if (typeof options.tsconfigRootDir === "string") {
-    extra.tsconfigRootDir = options.tsconfigRootDir;
-  }
+  // if (typeof options.tsconfigRootDir === "string") {
+  //   extra.tsconfigRootDir = options.tsconfigRootDir;
+  // }
 
-  extra.createDefaultProgram = typeof options.createDefaultProgram === "boolean" && options.createDefaultProgram;
+  // extra.createDefaultProgram = typeof options.createDefaultProgram === "boolean" && options.createDefaultProgram;
 
-  extra.EXPERIMENTAL_useSourceOfProjectReferenceRedirect =
-    typeof options.EXPERIMENTAL_useSourceOfProjectReferenceRedirect === "boolean" &&
-    options.EXPERIMENTAL_useSourceOfProjectReferenceRedirect;
+  // extra.EXPERIMENTAL_useSourceOfProjectReferenceRedirect =
+  //   typeof options.EXPERIMENTAL_useSourceOfProjectReferenceRedirect === "boolean" &&
+  //   options.EXPERIMENTAL_useSourceOfProjectReferenceRedirect;
 
-  if (Array.isArray(options.extraFileExtensions) && options.extraFileExtensions.every(ext => typeof ext === "string")) {
-    extra.extraFileExtensions = options.extraFileExtensions;
-  }
+  // if (Array.isArray(options.extraFileExtensions) && options.extraFileExtensions.every(ext => typeof ext === "string")) {
+  //   extra.extraFileExtensions = options.extraFileExtensions;
+  // }
+
   /**
    * Allow the user to enable or disable the preservation of the AST node maps
    * during the conversion process.
