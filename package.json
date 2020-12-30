@@ -4,7 +4,7 @@
   "description": "TypeScript language service plugin for ESLint",
   "main": "lib/index.js",
   "scripts": {
-    "clean": "rimraf local lib",
+    "clean": "rimraf local lib \"e2e/**/*.log\"",
     "prebuild": "rimraf node_modules/@types/eslint/node_modules/@types/estree",
     "build": "tsc -p tsconfig.build.json",
     "build:local": "tsc -p tsconfig.build.json --outDir local",

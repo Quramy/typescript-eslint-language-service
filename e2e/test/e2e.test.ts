@@ -65,6 +65,20 @@ describe("LanguageService plugin", () => {
       expect(maskFileNameForDiagnostics(found)).toMatchSnapshot();
     });
 
+    it("should return ESLint error when the project uses @typescript-eslint/parser and be configured with 'eslint:recommended'", async () => {
+      server = createServer({ projectPath: path.resolve(__dirname, "../projects/simple") });
+      const { file, fileContent } = server.readFile("./eslint-recommended/main.ts");
+      server.send({ command: "open", arguments: { file, fileContent, scriptKindName: "TS" } });
+      await server.waitEvent("projectLoadingFinish");
+      server.send({ command: "geterr", arguments: { files: [file], delay: 0 } });
+      await server.waitEvent("semanticDiag");
+      const found = findEventResponse(server.responses, "semanticDiag");
+      if (!found) {
+        throw new assert.AssertionError();
+      }
+      expect(maskFileNameForDiagnostics(found)).toMatchSnapshot();
+    });
+
     it("should return ESLint error when the project is configured with ESLint plugins", async () => {
       server = createServer({ projectPath: path.resolve(__dirname, "../projects/ts-eslint-plugin") });
       const { file, fileContent } = server.readFile("./main.ts");

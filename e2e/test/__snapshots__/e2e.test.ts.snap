@@ -110,3 +110,29 @@ Object {
   "type": "event",
 }
 `;
+
+exports[`LanguageService plugin #getSemanticDiagnostics should return ESLint error when the project uses @typescript-eslint/parser and be configured with 'eslint:recommended' 1`] = `
+Object {
+  "body": Object {
+    "diagnostics": Array [
+      Object {
+        "category": "error",
+        "code": 30010,
+        "end": Object {
+          "line": 1,
+          "offset": 10,
+        },
+        "start": Object {
+          "line": 1,
+          "offset": 1,
+        },
+        "text": "[no-debugger] Unexpected 'debugger' statement.",
+      },
+    ],
+    "file": "<file>",
+  },
+  "event": "semanticDiag",
+  "seq": 0,
+  "type": "event",
+}
+`;
