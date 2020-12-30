@@ -5,7 +5,7 @@ module.exports = {
     node: true,
   },
   extends: [
-    // "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended",
   ],
   parser: "@typescript-eslint/parser",
   parserOptions: {
@@ -16,6 +16,7 @@ module.exports = {
     "@typescript-eslint",
   ],
   rules: {
+    "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/no-unused-vars": "error",
   },
 };

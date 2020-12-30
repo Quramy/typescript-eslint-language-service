@@ -43,6 +43,7 @@ declare module "@eslint/eslintrc/lib/cascading-config-array-factory" {
    *
    */
   export class CascadingConfigArrayFactory {
+    constructor(options: { eslintRecommendedPath?: string | undefined; eslintAllPath?: string | undefined });
     public getConfigArrayForFile(filename: string): ConfigArray<InternalConfig>;
     public clearCache(): void;
   }

@@ -39,6 +39,7 @@ function create(info: ts.server.PluginCreateInfo): ts.LanguageService {
 
   const configProvider = new ESLintConfigProvider({
     directoriesToWatch: watchDirs,
+    log: logger,
     host: serverHost,
   });
 

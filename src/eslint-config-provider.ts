@@ -28,6 +28,7 @@ export type ConfigProviderHost = {
 
 export type ESLintConfigProviderOptions = {
   host: ConfigProviderHost;
+  log?: (msg: string) => void;
   directoriesToWatch: string[];
 };
 
@@ -47,10 +48,17 @@ export interface ConfigProvider {
 export class ESLintConfigProvider implements ConfigProvider {
   private readonly host: ConfigProviderHost;
   private readonly factory: CascadingConfigArrayFactory;
+  private readonly log: (msg: string) => void;
 
-  public constructor({ host, directoriesToWatch }: ESLintConfigProviderOptions) {
+  public constructor({ host, log = () => {}, directoriesToWatch }: ESLintConfigProviderOptions) {
     this.host = host;
-    this.factory = new (getFactroyClass())();
+    this.log = log;
+    const eslintRecommendedPath = this.resolveESLintIntrinsicConfigPath("eslint-recommended");
+    const eslintAllPath = this.resolveESLintIntrinsicConfigPath("eslint-all");
+    this.factory = new (getFactroyClass())({
+      eslintAllPath,
+      eslintRecommendedPath,
+    });
 
     directoriesToWatch.forEach(directory => {
       ESLINTRC_SUFFIX_LIST.map(suffix => path.resolve(directory, suffix)).forEach(eslintrcFilepath => {
@@ -65,5 +73,15 @@ export class ESLintConfigProvider implements ConfigProvider {
 
   public getConfigForFile(fileName: string) {
     return this.factory.getConfigArrayForFile(fileName).extractConfig(fileName);
+  }
+
+  private resolveESLintIntrinsicConfigPath(name: "eslint-all" | "eslint-recommended") {
+    let ret: string | undefined = undefined;
+    try {
+      ret = require.resolve(`eslint/conf/${name}`);
+    } catch (e) {
+      this.log(e);
+    }
+    return ret;
   }
 }

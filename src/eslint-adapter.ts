@@ -144,7 +144,14 @@ export class ESLintAdapter {
 
       return [...original, ...translateToDiagnosticsFromESLintResult(eslintResult, sourceFile)];
     } catch (error) {
-      this.logger(error.message ? error.message : "unknow error");
+      if (error instanceof Error) {
+        this.logger(error.message);
+        if (error.stack) {
+          this.logger(error.stack);
+        }
+      } else {
+        this.logger(error);
+      }
       return original;
     }
   }
