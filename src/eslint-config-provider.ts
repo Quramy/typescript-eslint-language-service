@@ -55,6 +55,15 @@ export class ESLintConfigProvider implements ConfigProvider {
     this.log = log;
     const eslintRecommendedPath = this.resolveESLintIntrinsicConfigPath("eslint-recommended");
     const eslintAllPath = this.resolveESLintIntrinsicConfigPath("eslint-all");
+
+    //
+    // It requires the ESLint intrinsic configuration js file path when user config has "eslint/recommended" or "eslint/all" such as:
+    //
+    // ```yaml
+    // extends:
+    //   - "eslint/recommended"
+    // ```
+    //
     this.factory = new (getFactroyClass())({
       eslintAllPath,
       eslintRecommendedPath,
