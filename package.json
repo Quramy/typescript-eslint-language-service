@@ -13,7 +13,10 @@
     "prettier": "prettier \"*.md\" \"*.json\" \"*.yml\" \"src/**/*\" \"e2e/**/*\"",
     "format": "yarn prettier --write",
     "format:check": "yarn prettier --check",
-    "e2e": "jest --config e2e/jest.config.json"
+    "e2e": "jest --config e2e/jest.config.json",
+    "postinstall": "husky install",
+    "prepublishOnly": "pinst --disable",
+    "postpublish": "pinst --enable"
   },
   "repository": {
     "type": "git",
@@ -46,8 +49,9 @@
     "eslint": "7.19.0",
     "eslint-config-prettier": "7.2.0",
     "fretted-strings": "1.0.1",
-    "husky": "5.0.9",
+    "husky": "5",
     "jest": "26.6.3",
+    "pinst": "2.1.4",
     "prettier": "2.2.1",
     "pretty-quick": "3.1.0",
     "rimraf": "3.0.2",
