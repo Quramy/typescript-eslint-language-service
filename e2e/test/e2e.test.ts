@@ -106,6 +106,20 @@ describe("LanguageService plugin", () => {
       }
       expect(maskFileNameForDiagnostics(found)).toMatchSnapshot();
     });
+
+    it("should not reproduce issue 217", async () => {
+      server = createServer({ projectPath: path.resolve(__dirname, "../projects/ts-eslint-plugin") });
+      const { file, fileContent } = server.readFile("./reproduce_issue_217/main.ts");
+      server.send({ command: "open", arguments: { file, fileContent, scriptKindName: "TS" } });
+      await server.waitEvent("projectLoadingFinish");
+      server.send({ command: "geterr", arguments: { files: [file], delay: 0 } });
+      await server.waitEvent("semanticDiag");
+      const found = findEventResponse(server.responses, "semanticDiag");
+      if (!found) {
+        throw new assert.AssertionError();
+      }
+      expect(maskFileNameForDiagnostics(found)).toMatchSnapshot();
+    });
   });
 
   describe("#getCodeFixes", () => {
