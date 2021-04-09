@@ -1,11 +1,26 @@
+// Note:
+//
+// Almost all line in this source file are copied from https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/typescript-estree/src/parser.ts ,
+// This code is workaround for https://github.com/typescript-eslint/typescript-eslint/issues/774 .
+
 import ts from "typescript";
 import { SourceCode, AST, Scope } from "eslint";
 import { ParserOptions } from "@typescript-eslint/types";
 import { analyze, AnalyzeOptions } from "@typescript-eslint/scope-manager";
-import { Extra } from "@typescript-eslint/typescript-estree/dist/parser-options";
 import { visitorKeys } from "@typescript-eslint/visitor-keys";
 import { ParseAndGenerateServicesResult, TSESTreeOptions } from "@typescript-eslint/typescript-estree";
+
+import { sync as globSync } from "globby";
+import isGlob from "is-glob";
+
+/* The following types or functions are typescript-estree internals */
+import { Extra } from "@typescript-eslint/typescript-estree/dist/parser-options";
 import * as TsEstree from "@typescript-eslint/typescript-estree/dist/ast-converter";
+import {
+  CanonicalPath,
+  getCanonicalFileName,
+  ensureAbsolutePath,
+} from "@typescript-eslint/typescript-estree/dist/create-program/shared";
 
 function validateBoolean(value: boolean | undefined, fallback = false): boolean {
   if (typeof value !== "boolean") {
@@ -45,6 +60,56 @@ function createExtra(code: string) {
     comment: true,
     comments: [],
   };
+}
+
+function getTsconfigPath(tsconfigPath: string, extra: Extra): CanonicalPath {
+  return getCanonicalFileName(ensureAbsolutePath(tsconfigPath, extra));
+}
+
+/**
+ * Normalizes, sanitizes, resolves and filters the provided project paths
+ */
+function prepareAndTransformProjects(
+  extra: Extra,
+  projectsInput: string | string[] | undefined,
+  ignoreListInput: string[],
+): CanonicalPath[] {
+  const sanitizedProjects: string[] = [];
+
+  // Normalize and sanitize the project paths
+  if (typeof projectsInput === "string") {
+    sanitizedProjects.push(projectsInput);
+  } else if (Array.isArray(projectsInput)) {
+    for (const project of projectsInput) {
+      if (typeof project === "string") {
+        sanitizedProjects.push(project);
+      }
+    }
+  }
+
+  if (sanitizedProjects.length === 0) {
+    return [];
+  }
+
+  // Transform glob patterns into paths
+  const nonGlobProjects = sanitizedProjects.filter(project => !isGlob(project));
+  const globProjects = sanitizedProjects.filter(project => isGlob(project));
+  const uniqueCanonicalProjectPaths = new Set(
+    nonGlobProjects
+      .concat(
+        globSync([...globProjects, ...ignoreListInput], {
+          cwd: extra.tsconfigRootDir,
+        }),
+      )
+      .map(project => getTsconfigPath(project, extra)),
+  );
+
+  // extra.log(
+  //   'parserOptions.project (excluding ignored) matched projects: %s',
+  //   uniqueCanonicalProjectPaths,
+  // );
+
+  return Array.from(uniqueCanonicalProjectPaths);
 }
 
 function applyParserOptionsToExtra(extra: Extra, options: TSESTreeOptions) {
@@ -95,29 +160,28 @@ function applyParserOptionsToExtra(extra: Extra, options: TSESTreeOptions) {
     extra.log = Function.prototype as any;
   }
 
-  // astConverter function don't use extra.projects option
-  //
-  // see https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/typescript-estree/src/ast-converter.ts
-  //
-  // if (typeof options.project === "string") {
-  //   extra.projects = [options.project];
-  // } else if (Array.isArray(options.project) && options.project.every(projectPath => typeof projectPath === "string")) {
-  //   extra.projects = options.project;
-  // }
+  if (typeof options.tsconfigRootDir === "string") {
+    extra.tsconfigRootDir = options.tsconfigRootDir;
+  }
 
-  // if (typeof options.tsconfigRootDir === "string") {
-  //   extra.tsconfigRootDir = options.tsconfigRootDir;
-  // }
+  // NOTE - ensureAbsolutePath relies upon having the correct tsconfigRootDir in extra
+  extra.filePath = ensureAbsolutePath(extra.filePath, extra);
 
-  // extra.createDefaultProgram = typeof options.createDefaultProgram === "boolean" && options.createDefaultProgram;
+  const projectFolderIgnoreList = (options.projectFolderIgnoreList ?? ["**/node_modules/**"])
+    .reduce<string[]>((acc, folder) => {
+      if (typeof folder === "string") {
+        acc.push(folder);
+      }
+      return acc;
+    }, [])
+    // prefix with a ! for not match glob
+    .map(folder => (folder.startsWith("!") ? folder : `!${folder}`));
+  // NOTE - prepareAndTransformProjects relies upon having the correct tsconfigRootDir in extra
+  extra.projects = prepareAndTransformProjects(extra, options.project, projectFolderIgnoreList);
 
-  // extra.EXPERIMENTAL_useSourceOfProjectReferenceRedirect =
-  //   typeof options.EXPERIMENTAL_useSourceOfProjectReferenceRedirect === "boolean" &&
-  //   options.EXPERIMENTAL_useSourceOfProjectReferenceRedirect;
-
-  // if (Array.isArray(options.extraFileExtensions) && options.extraFileExtensions.every(ext => typeof ext === "string")) {
-  //   extra.extraFileExtensions = options.extraFileExtensions;
-  // }
+  if (Array.isArray(options.extraFileExtensions) && options.extraFileExtensions.every(ext => typeof ext === "string")) {
+    extra.extraFileExtensions = options.extraFileExtensions;
+  }
 
   /**
    * Allow the user to enable or disable the preservation of the AST node maps
@@ -130,6 +194,12 @@ function applyParserOptionsToExtra(extra: Extra, options: TSESTreeOptions) {
   if (options.preserveNodeMaps === undefined && extra.projects.length > 0) {
     extra.preserveNodeMaps = true;
   }
+
+  // extra.createDefaultProgram = typeof options.createDefaultProgram === "boolean" && options.createDefaultProgram;
+
+  extra.EXPERIMENTAL_useSourceOfProjectReferenceRedirect =
+    typeof options.EXPERIMENTAL_useSourceOfProjectReferenceRedirect === "boolean" &&
+    options.EXPERIMENTAL_useSourceOfProjectReferenceRedirect;
 
   return extra;
 }

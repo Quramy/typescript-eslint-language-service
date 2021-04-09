@@ -47,6 +47,84 @@ Object {
 }
 `;
 
+exports[`LanguageService plugin #getSemanticDiagnostics should not reproduce issue 217 1`] = `
+Object {
+  "body": Object {
+    "diagnostics": Array [
+      Object {
+        "category": "error",
+        "code": 30010,
+        "end": Object {
+          "line": 2,
+          "offset": 16,
+        },
+        "start": Object {
+          "line": 2,
+          "offset": 3,
+        },
+        "text": "[@typescript-eslint/await-thenable] Unexpected \`await\` of a non-Promise (non-\\"Thenable\\") value.",
+      },
+      Object {
+        "category": "error",
+        "code": 30010,
+        "end": Object {
+          "line": 6,
+          "offset": 29,
+        },
+        "start": Object {
+          "line": 6,
+          "offset": 14,
+        },
+        "text": "[@typescript-eslint/no-implied-eval] Implied eval. Consider passing a function.",
+      },
+      Object {
+        "category": "error",
+        "code": 30010,
+        "end": Object {
+          "line": 10,
+          "offset": 17,
+        },
+        "start": Object {
+          "line": 10,
+          "offset": 15,
+        },
+        "text": "[@typescript-eslint/no-base-to-string] '{} will evaluate to '[object Object]' when stringified.",
+      },
+      Object {
+        "category": "error",
+        "code": 30010,
+        "end": Object {
+          "line": 15,
+          "offset": 20,
+        },
+        "start": Object {
+          "line": 15,
+          "offset": 14,
+        },
+        "text": "[@typescript-eslint/dot-notation] [\\"prop\\"] is better written in dot notation.",
+      },
+      Object {
+        "category": "error",
+        "code": 30010,
+        "end": Object {
+          "line": 19,
+          "offset": 37,
+        },
+        "start": Object {
+          "line": 19,
+          "offset": 15,
+        },
+        "text": "[@typescript-eslint/no-confusing-void-expression] Placing a void expression inside another expression is forbidden. Move it to its own statement instead.",
+      },
+    ],
+    "file": "<file>",
+  },
+  "event": "semanticDiag",
+  "seq": 0,
+  "type": "event",
+}
+`;
+
 exports[`LanguageService plugin #getSemanticDiagnostics should not return ESLint error when the project does not use @typescript-eslint/parser 1`] = `
 Object {
   "body": Object {
