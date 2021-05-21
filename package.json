@@ -52,7 +52,7 @@
     "husky": "6.0.0",
     "jest": "26.6.3",
     "pinst": "2.1.6",
-    "prettier": "2.2.1",
+    "prettier": "2.3.0",
     "pretty-quick": "3.1.0",
     "rimraf": "3.0.2",
     "ts-jest": "26.5.6",
