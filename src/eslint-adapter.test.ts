@@ -28,7 +28,7 @@ function filterSourceFileFromDiagnosticList(diagnostics: ts.Diagnostic[]) {
   });
 }
 
-const getProgram = () => (({} as any) as ts.Program);
+const getProgram = () => ({} as any as ts.Program);
 
 describe("ESLintAdapter", () => {
   describe("#getSemanticDiagnostics", () => {
