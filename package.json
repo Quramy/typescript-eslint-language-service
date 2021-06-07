@@ -75,6 +75,6 @@
     ]
   },
   "dependencies": {
-    "read-pkg-up": "^7.0.0"
+    "read-pkg-up": "^8.0.0"
   }
 }
