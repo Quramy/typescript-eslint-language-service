@@ -50,7 +50,7 @@
     "eslint-config-prettier": "8.3.0",
     "fretted-strings": "1.0.1",
     "husky": "6.0.0",
-    "jest": "27.0.5",
+    "jest": "27.0.6",
     "pinst": "2.1.6",
     "prettier": "2.3.1",
     "pretty-quick": "3.1.1",
