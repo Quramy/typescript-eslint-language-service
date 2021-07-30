@@ -38,7 +38,7 @@
   },
   "homepage": "https://github.com/Quramy/typescript-eslint-language-service#readme",
   "devDependencies": {
-    "@types/eslint": "7.2.13",
+    "@types/eslint": "7.28.0",
     "@types/estree": "0.0.50",
     "@types/is-glob": "4.0.2",
     "@types/jest": "26.0.24",
@@ -46,7 +46,7 @@
     "@typescript-eslint/eslint-plugin": "4.26.1",
     "@typescript-eslint/parser": "4.26.1",
     "@typescript-eslint/typescript-estree": "4.26.1",
-    "eslint": "7.29.0",
+    "eslint": "7.32.0",
     "eslint-config-prettier": "8.3.0",
     "fretted-strings": "1.0.1",
     "husky": "7.0.1",
