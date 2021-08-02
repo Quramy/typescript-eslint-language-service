@@ -32,6 +32,12 @@ declare module "@eslint/eslintrc/lib/config-array/config-array" {
   }
 }
 
+declare module "@eslint/eslintrc/lib/config-array/config-dependency" {
+  export class ConfigDependency {
+    public constructor(arg: any);
+  }
+}
+
 declare module "@eslint/eslintrc/lib/cascading-config-array-factory" {
   // eslint-disable-next-line
   import { InternalConfig } from "@eslint/eslintrc/lib/config-array/extracted-config";

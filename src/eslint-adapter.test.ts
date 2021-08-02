@@ -5,15 +5,18 @@ import { AstConverter } from "./ast-converter";
 import { ESLintAdapter } from "./eslint-adapter";
 import { ConfigProvider } from "./eslint-config-provider";
 import { ConfigArray } from "@eslint/eslintrc/lib/config-array/config-array";
+import { ConfigDependency } from "@eslint/eslintrc/lib/config-array/config-dependency";
 import { TS_LANGSERVICE_ESLINT_DIAGNOSTIC_ERROR_CODE } from "./consts";
 
 class TestingConfigProvider implements ConfigProvider {
   public conf: any = {
-    parser: {
+    parser: new ConfigDependency({
+      definition: require("@typescript-eslint/parser"),
       error: null,
       id: "@typescript-eslint/parser",
       filePath: path.resolve(__dirname, "../node_modules/@typescript-eslint/parser/dist/parser.js"),
-    },
+    }),
+    parserOptions: { ecmaVersion: "latest" },
   };
   public getConfigArrayForFile(): ConfigArray {
     return new ConfigArray(this.conf);
