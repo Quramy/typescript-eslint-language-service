@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "skipLibCheck": true,
     "plugins": [{ "name": "../../local/index.js" }],
     /* Basic Options */
     // "incremental": true,                   /* Enable incremental compilation */

@@ -1,4 +1,3 @@
-import readPkgUp = require("read-pkg-up");
 import ts from "typescript";
 import { Linter, CLIEngine } from "eslint";
 import { AstConverter } from "./ast-converter";
@@ -117,10 +116,7 @@ export class ESLintAdapter {
 
     const configArray = this.configProvider.getConfigArrayForFile(fileName);
     const configFileContent = configArray.extractConfig(fileName).toCompatibleObjectAsConfigFileContent();
-    if (
-      !configFileContent.parser ||
-      (readPkgUp.sync({ cwd: configFileContent.parser })?.packageJson.name ?? "") !== "@typescript-eslint/parser"
-    ) {
+    if (!isParserModuleNameValid(configFileContent.parser, "@typescript-eslint/parser")) {
       throw new InvalidParserError();
     }
     const parserOptions = (configFileContent.parserOptions ? configFileContent.parserOptions : {}) as ParserOptions;
@@ -190,5 +186,15 @@ export class ESLintAdapter {
       return original;
     }
     return original;
+  }
+}
+
+function isParserModuleNameValid(parserModuleSpecifier: string | undefined, parserModuleName: string) {
+  if (!parserModuleSpecifier) return false;
+  try {
+    const p = require.resolve(parserModuleSpecifier);
+    return p.indexOf(parserModuleName) !== -1;
+  } catch (e) {
+    return false;
   }
 }
