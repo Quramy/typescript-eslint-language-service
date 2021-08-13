@@ -41,6 +41,7 @@ function createExtra(code: string) {
     jsx: false,
     useJSXTextNode: false,
     log: () => {},
+    programs: null,
     projects: [],
     errorOnUnknownASTType: false,
     errorOnTypeScriptSyntacticAndSemanticIssues: false,
@@ -51,6 +52,8 @@ function createExtra(code: string) {
     createDefaultProgram: false,
     filePath: "",
     EXPERIMENTAL_useSourceOfProjectReferenceRedirect: false,
+    singleRun: false,
+    moduleResolver: "",
   };
   return {
     ...base,
@@ -167,17 +170,25 @@ function applyParserOptionsToExtra(extra: Extra, options: TSESTreeOptions) {
   // NOTE - ensureAbsolutePath relies upon having the correct tsconfigRootDir in extra
   extra.filePath = ensureAbsolutePath(extra.filePath, extra);
 
-  const projectFolderIgnoreList = (options.projectFolderIgnoreList ?? ["**/node_modules/**"])
-    .reduce<string[]>((acc, folder) => {
-      if (typeof folder === "string") {
-        acc.push(folder);
-      }
-      return acc;
-    }, [])
-    // prefix with a ! for not match glob
-    .map(folder => (folder.startsWith("!") ? folder : `!${folder}`));
-  // NOTE - prepareAndTransformProjects relies upon having the correct tsconfigRootDir in extra
-  extra.projects = prepareAndTransformProjects(extra, options.project, projectFolderIgnoreList);
+  if (Array.isArray(options.programs)) {
+    if (options.programs.length) {
+      extra.programs = options.programs;
+    }
+  }
+
+  if (!extra.programs) {
+    const projectFolderIgnoreList = (options.projectFolderIgnoreList ?? ["**/node_modules/**"])
+      .reduce<string[]>((acc, folder) => {
+        if (typeof folder === "string") {
+          acc.push(folder);
+        }
+        return acc;
+      }, [])
+      // prefix with a ! for not match glob
+      .map(folder => (folder.startsWith("!") ? folder : `!${folder}`));
+    // NOTE - prepareAndTransformProjects relies upon having the correct tsconfigRootDir in extra
+    extra.projects = prepareAndTransformProjects(extra, options.project, projectFolderIgnoreList);
+  }
 
   if (Array.isArray(options.extraFileExtensions) && options.extraFileExtensions.every(ext => typeof ext === "string")) {
     extra.extraFileExtensions = options.extraFileExtensions;
@@ -200,6 +211,10 @@ function applyParserOptionsToExtra(extra: Extra, options: TSESTreeOptions) {
   extra.EXPERIMENTAL_useSourceOfProjectReferenceRedirect =
     typeof options.EXPERIMENTAL_useSourceOfProjectReferenceRedirect === "boolean" &&
     options.EXPERIMENTAL_useSourceOfProjectReferenceRedirect;
+
+  if (typeof options.moduleResolver === "string") {
+    extra.moduleResolver = options.moduleResolver;
+  }
 
   return extra;
 }
