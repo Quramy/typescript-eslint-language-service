@@ -48,7 +48,7 @@
     "eslint": "7.32.0",
     "eslint-config-prettier": "8.3.0",
     "fretted-strings": "1.0.1",
-    "husky": "7.0.1",
+    "husky": "7.0.2",
     "jest": "27.0.6",
     "pinst": "2.1.6",
     "prettier": "2.3.2",
