@@ -88,7 +88,7 @@ export class ESLintConfigProvider implements ConfigProvider {
     let ret: string | undefined = undefined;
     try {
       ret = require.resolve(`eslint/conf/${name}`);
-    } catch (e) {
+    } catch (e: any) {
       this.log(e);
     }
     return ret;

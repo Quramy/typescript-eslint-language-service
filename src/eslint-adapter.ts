@@ -146,7 +146,7 @@ export class ESLintAdapter {
           this.logger(error.stack);
         }
       } else {
-        this.logger(error);
+        this.logger(`${error}`);
       }
       return original;
     }
@@ -181,7 +181,7 @@ export class ESLintAdapter {
           fileName,
         ),
       ];
-    } catch (error) {
+    } catch (error: any) {
       this.logger(error.message ? error.message : "unknow error");
       return original;
     }
