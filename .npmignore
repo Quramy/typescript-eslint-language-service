@@ -1,11 +1,15 @@
 src/
 .github/
 .git/
-.e2e/
+.husky/
 .vscode/
+e2e/
 test-fixtures/
 local/
 .prettierignore
 .prettierrc
 .eslintrc
 .eslintignore
+*.test.js
+*.test.js.map
+*.test.d.ts
