@@ -1,5 +1,5 @@
 import ts from "typescript";
-import { Linter, CLIEngine } from "eslint";
+import { Linter } from "eslint";
 import { AstConverter } from "./ast-converter";
 import { InvalidParserError } from "./errors";
 import { ConfigProvider } from "./eslint-config-provider";
@@ -110,10 +110,6 @@ export class ESLintAdapter {
   }
 
   private getESLintResult(fileName: string, sourceFile: ts.SourceFile) {
-    if (new CLIEngine({}).isPathIgnored(fileName)) {
-      return [];
-    }
-
     const configArray = this.configProvider.getConfigArrayForFile(fileName);
     const configFileContent = configArray.extractConfig(fileName).toCompatibleObjectAsConfigFileContent();
     if (!isParserModuleNameValid(configFileContent.parser, "@typescript-eslint/parser")) {

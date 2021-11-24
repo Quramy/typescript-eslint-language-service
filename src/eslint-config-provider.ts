@@ -1,24 +1,10 @@
 import path from "path";
 import ts from "typescript";
-import type { ConfigArray } from "@eslint/eslintrc/lib/config-array/config-array";
-import type { CascadingConfigArrayFactory } from "@eslint/eslintrc/lib/cascading-config-array-factory";
+import { Legacy } from "@eslint/eslintrc";
+import type { ConfigArray, CascadingConfigArrayFactory } from "@eslint/eslintrc";
 
-let _configArrayFactory: typeof CascadingConfigArrayFactory;
 function getFactroyClass() {
-  if (_configArrayFactory) return _configArrayFactory;
-  try {
-    // for ESLint >= v7.12.0
-    const p = require.resolve("@eslint/eslintrc/lib/cascading-config-array-factory");
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    _configArrayFactory = require(p).CascadingConfigArrayFactory;
-    return _configArrayFactory;
-  } catch {
-    // for ESLint < v7.12.0
-    const p = require.resolve("eslint/lib/cli-engine/cascading-config-array-factory");
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    _configArrayFactory = require(p).CascadingConfigArrayFactory;
-    return _configArrayFactory;
-  }
+  return Legacy.CascadingConfigArrayFactory;
 }
 
 export type ConfigProviderHost = {
