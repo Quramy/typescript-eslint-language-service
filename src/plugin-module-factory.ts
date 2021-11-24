@@ -52,6 +52,12 @@ function create(info: ts.server.PluginCreateInfo): ts.LanguageService {
     },
   });
 
+  const originalReadFileFn = serverHost.readFile;
+  serverHost.readFile = (path: string, encoding?: string) => {
+    adapter.checkFileToBeIgnored(path);
+    return originalReadFileFn!(path, encoding);
+  };
+
   const proxy = new LanguageServiceProxyBuilder(info)
     .wrap("getSemanticDiagnostics", delegate => adapter.getSemanticDiagnostics.bind(adapter, delegate))
     .wrap("getCodeFixesAtPosition", delegate => adapter.getCodeFixesAtPosition.bind(adapter, delegate))

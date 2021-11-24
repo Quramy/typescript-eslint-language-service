@@ -23,19 +23,25 @@ declare module "@eslint/eslintrc/lib/config-array/extracted-config" {
   }
 }
 
-declare module "@eslint/eslintrc/lib/config-array/config-array" {
+declare module "@eslint/eslintrc" {
   import { ExtractedConfig, InternalConfig } from "@eslint/eslintrc/lib/config-array/extracted-config";
+  import { CascadingConfigArrayFactory } from "@eslint/eslintrc/lib/cascading-config-array-factory";
+  export type { CascadingConfigArrayFactory } from "@eslint/eslintrc/lib/cascading-config-array-factory";
 
   export class ConfigArray<T = InternalConfig> extends Array<T> {
     public constructor(...args: T[]);
     public extractConfig(filename: string): ExtractedConfig;
   }
-}
 
-declare module "@eslint/eslintrc/lib/config-array/config-dependency" {
   export class ConfigDependency {
     public constructor(arg: any);
   }
+
+  export const Legacy = {
+    ConfigDependency,
+    ConfigArray,
+    CascadingConfigArrayFactory,
+  };
 }
 
 declare module "@eslint/eslintrc/lib/cascading-config-array-factory" {

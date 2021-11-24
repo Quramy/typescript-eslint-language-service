@@ -1,5 +1,5 @@
 import ts from "typescript";
-import { Linter, CLIEngine } from "eslint";
+import { Linter, ESLint } from "eslint";
 import { AstConverter } from "./ast-converter";
 import { InvalidParserError } from "./errors";
 import { ConfigProvider } from "./eslint-config-provider";
@@ -100,6 +100,7 @@ export class ESLintAdapter {
   private readonly converter: AstConverter;
   private readonly configProvider: ConfigProvider;
   private readonly getSourceFile: (fileName: string) => ts.SourceFile | undefined;
+  private readonly ignoredFilepathMap: Map<string, boolean>;
 
   public constructor({ logger, converter, configProvider, getSourceFile }: ESLintAdapterOptions) {
     this.linter = new Linter();
@@ -107,13 +108,11 @@ export class ESLintAdapter {
     this.converter = converter;
     this.configProvider = configProvider;
     this.getSourceFile = getSourceFile;
+    this.ignoredFilepathMap = new Map();
   }
 
   private getESLintResult(fileName: string, sourceFile: ts.SourceFile) {
-    if (new CLIEngine({}).isPathIgnored(fileName)) {
-      return [];
-    }
-
+    if (this.ignoredFilepathMap.get(fileName) === true) return [];
     const configArray = this.configProvider.getConfigArrayForFile(fileName);
     const configFileContent = configArray.extractConfig(fileName).toCompatibleObjectAsConfigFileContent();
     if (!isParserModuleNameValid(configFileContent.parser, "@typescript-eslint/parser")) {
@@ -124,6 +123,15 @@ export class ESLintAdapter {
 
     // See https://github.com/eslint/eslint/blob/v6.1.0/lib/linter/linter.js#L1130
     return this.linter.verify(sourceCode, configArray as any, { filename: fileName });
+  }
+
+  public checkFileToBeIgnored(fileName: string) {
+    if (fileName.indexOf("node_modules/") !== -1) return;
+    if (!fileName.endsWith(".ts") && !fileName.endsWith(".tsx")) return;
+    Promise.resolve()
+      .then(() => new ESLint())
+      .then(eslint => eslint.isPathIgnored(fileName))
+      .then(result => this.ignoredFilepathMap.set(fileName, result));
   }
 
   public getSemanticDiagnostics(

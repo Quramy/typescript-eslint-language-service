@@ -4,13 +4,13 @@ import { mark, Frets } from "fretted-strings";
 import { AstConverter } from "./ast-converter";
 import { ESLintAdapter } from "./eslint-adapter";
 import { ConfigProvider } from "./eslint-config-provider";
-import { ConfigArray } from "@eslint/eslintrc/lib/config-array/config-array";
-import { ConfigDependency } from "@eslint/eslintrc/lib/config-array/config-dependency";
+import { Legacy } from "@eslint/eslintrc";
+import type { ConfigArray } from "@eslint/eslintrc";
 import { TS_LANGSERVICE_ESLINT_DIAGNOSTIC_ERROR_CODE } from "./consts";
 
 class TestingConfigProvider implements ConfigProvider {
   public conf: any = {
-    parser: new ConfigDependency({
+    parser: new Legacy.ConfigDependency({
       definition: require("@typescript-eslint/parser"),
       error: null,
       id: "@typescript-eslint/parser",
@@ -19,7 +19,7 @@ class TestingConfigProvider implements ConfigProvider {
     parserOptions: { ecmaVersion: "latest" },
   };
   public getConfigArrayForFile(): ConfigArray {
-    return new ConfigArray(this.conf);
+    return new Legacy.ConfigArray(this.conf);
   }
 }
 
