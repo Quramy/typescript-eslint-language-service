@@ -73,7 +73,8 @@ export class ESLintConfigProvider implements ConfigProvider {
   private resolveESLintIntrinsicConfigPath(name: "eslint-all" | "eslint-recommended") {
     let ret: string | undefined = undefined;
     try {
-      ret = require.resolve(`eslint/conf/${name}`);
+      const fragments = require.resolve("eslint").split("node_modules/eslint");
+      ret = [...fragments.slice(0, fragments.length - 1), `/conf/${name}.js`].join("node_modules/eslint");
     } catch (e: any) {
       this.log(e);
     }
