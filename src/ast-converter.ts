@@ -54,8 +54,6 @@ function createExtra(code: string) {
     singleRun: false,
     moduleResolver: "",
   };
-  // Note: for typescripit-eslit < v5
-  (base as Record<string, any>)["useJSXTextNode"] = false;
   return {
     ...base,
     code,
@@ -139,20 +137,6 @@ function applyParserOptionsToExtra(extra: Extra, options: TSESTreeOptions) {
     extra.jsx = true;
   }
 
-  // Note: for typescripit-eslit < v5
-  /**
-   * The JSX AST changed the node type for string literals
-   * inside a JSX Element from `Literal` to `JSXText`.
-   *
-   * When value is `true`, these nodes will be parsed as type `JSXText`.
-   * When value is `false`, these nodes will be parsed as type `Literal`.
-   */
-  if (
-    typeof (options as Record<string, any>).useJSXTextNode === "boolean" &&
-    (options as Record<string, any>).useJSXTextNode
-  ) {
-    (extra as Record<string, any>).useJSXTextNode = true;
-  }
   /**
    * Allow the user to cause the parser to error if it encounters an unknown AST Node Type
    * (used in testing)
