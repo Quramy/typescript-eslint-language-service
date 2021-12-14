@@ -58,7 +58,7 @@
     "pretty-quick": "3.1.2",
     "rimraf": "3.0.2",
     "ts-jest": "27.0.7",
-    "typescript": "4.5.3"
+    "typescript": "4.5.4"
   },
   "jest": {
     "transform": {
