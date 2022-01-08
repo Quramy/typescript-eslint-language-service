@@ -40,7 +40,7 @@
   },
   "homepage": "https://github.com/Quramy/typescript-eslint-language-service#readme",
   "devDependencies": {
-    "@types/eslint": "8.2.1",
+    "@types/eslint": "8.2.2",
     "@types/estree": "0.0.50",
     "@types/is-glob": "4.0.2",
     "@types/jest": "27.4.0",
