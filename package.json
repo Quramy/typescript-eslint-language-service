@@ -48,7 +48,7 @@
     "@typescript-eslint/eslint-plugin": "5.13.0",
     "@typescript-eslint/parser": "5.13.0",
     "@typescript-eslint/typescript-estree": "5.13.0",
-    "eslint": "8.9.0",
+    "eslint": "8.10.0",
     "eslint-config-prettier": "8.4.0",
     "fretted-strings": "1.0.1",
     "husky": "7.0.4",
