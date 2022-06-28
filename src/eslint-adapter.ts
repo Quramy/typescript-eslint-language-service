@@ -1,3 +1,4 @@
+import path from "path";
 import ts from "typescript";
 import { Linter, ESLint } from "eslint";
 import { AstConverter } from "./ast-converter";
@@ -115,7 +116,7 @@ export class ESLintAdapter {
     if (this.ignoredFilepathMap.get(fileName) === true) return [];
     const configArray = this.configProvider.getConfigArrayForFile(fileName);
     const configFileContent = configArray.extractConfig(fileName).toCompatibleObjectAsConfigFileContent();
-    if (!isParserModuleNameValid(configFileContent.parser, "@typescript-eslint/parser")) {
+    if (!isParserModuleNameValid(configFileContent.parser, path.join("@typescript-eslint", "parser"))) {
       throw new InvalidParserError();
     }
     const parserOptions = (configFileContent.parserOptions ? configFileContent.parserOptions : {}) as ParserOptions;
