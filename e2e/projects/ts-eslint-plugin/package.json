@@ -8,6 +8,6 @@
     "@typescript-eslint/eslint-plugin": "5.26.0",
     "@typescript-eslint/parser": "5.26.0",
     "eslint": "8.21.0",
-    "typescript": "4.8.2"
+    "typescript": "4.8.3"
   }
 }
