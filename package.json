@@ -44,7 +44,7 @@
     "@types/estree": "1.0.0",
     "@types/is-glob": "4.0.2",
     "@types/jest": "28.1.8",
-    "@types/node": "16.11.47",
+    "@types/node": "16.11.62",
     "@typescript-eslint/eslint-plugin": "5.26.0",
     "@typescript-eslint/parser": "5.26.0",
     "@typescript-eslint/typescript-estree": "5.26.0",
