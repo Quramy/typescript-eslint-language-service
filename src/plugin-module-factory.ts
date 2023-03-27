@@ -2,7 +2,6 @@ import path from "path";
 import ts from "typescript/lib/tsserverlibrary";
 import { LanguageServiceProxyBuilder } from "./language-service-proxy-builder";
 import { ESLintAdapter } from "./eslint-adapter";
-import { AstConverter } from "./ast-converter";
 import { ESLintConfigProvider } from "./eslint-config-provider";
 import { TS_LANGSERVICE_ESLINT_DIAGNOSTIC_ERROR_CODE } from "./consts";
 
@@ -33,8 +32,6 @@ function create(info: ts.server.PluginCreateInfo): ts.LanguageService {
     return program;
   };
 
-  const converter = new AstConverter();
-
   const configProvider = new ESLintConfigProvider({
     directoriesToWatch: watchDirs,
     log: logger,
@@ -43,7 +40,6 @@ function create(info: ts.server.PluginCreateInfo): ts.LanguageService {
 
   const adapter = new ESLintAdapter({
     logger,
-    converter,
     configProvider,
     getSourceFile(fileName: string) {
       return getProgram().getSourceFile(fileName);

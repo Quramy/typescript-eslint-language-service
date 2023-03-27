@@ -1,10 +1,10 @@
 import ts from "typescript";
-import { Linter, ESLint } from "eslint";
-import { AstConverter } from "./ast-converter";
+import { SourceCode, Linter, ESLint } from "eslint";
+import { parseForESLint, type ParserOptions } from "@typescript-eslint/parser";
+
 import { InvalidParserError } from "./errors";
 import { ConfigProvider } from "./eslint-config-provider";
 import { TS_LANGSERVICE_ESLINT_DIAGNOSTIC_ERROR_CODE } from "./consts";
-import { ParserOptions } from "@typescript-eslint/parser";
 
 export function translateToDiagnosticsFromESLintResult(
   result: Linter.LintMessage[],
@@ -90,25 +90,44 @@ export function translateToCodeFixesFromESLintResult(
 export type ESLintAdapterOptions = {
   logger: (msg: string) => void;
   getSourceFile: (fileName: string) => ts.SourceFile | undefined;
-  converter: AstConverter;
   configProvider: ConfigProvider;
 };
 
 export class ESLintAdapter {
   private readonly linter: Linter;
   private readonly logger: (msg: string) => void;
-  private readonly converter: AstConverter;
   private readonly configProvider: ConfigProvider;
   private readonly getSourceFile: (fileName: string) => ts.SourceFile | undefined;
   private readonly ignoredFilepathMap: Map<string, boolean>;
 
-  public constructor({ logger, converter, configProvider, getSourceFile }: ESLintAdapterOptions) {
+  public constructor({ logger, configProvider, getSourceFile }: ESLintAdapterOptions) {
     this.linter = new Linter();
     this.logger = logger;
-    this.converter = converter;
     this.configProvider = configProvider;
     this.getSourceFile = getSourceFile;
     this.ignoredFilepathMap = new Map();
+  }
+
+  private convertToESLintSourceCode(src: ts.SourceFile, filename: string, options?: ParserOptions | null) {
+    const code = src.getFullText();
+    const originalOpt = options ?? {};
+    const { ast, scopeManager, services, visitorKeys } = parseForESLint(code, {
+      ...originalOpt,
+      filePath: filename,
+      comment: true,
+      loc: true,
+      range: true,
+      tokens: true,
+      warnOnUnsupportedTypeScriptVersion: false,
+    });
+    const source = new SourceCode({
+      text: code,
+      ast,
+      scopeManager,
+      parserServices: services,
+      visitorKeys,
+    } as unknown as any);
+    return source;
   }
 
   private getESLintResult(fileName: string, sourceFile: ts.SourceFile) {
@@ -119,7 +138,7 @@ export class ESLintAdapter {
       throw new InvalidParserError();
     }
     const parserOptions = (configFileContent.parserOptions ? configFileContent.parserOptions : {}) as ParserOptions;
-    const sourceCode = this.converter.convertToESLintSourceCode(sourceFile, fileName, parserOptions);
+    const sourceCode = this.convertToESLintSourceCode(sourceFile, fileName, parserOptions);
 
     // See https://github.com/eslint/eslint/blob/v6.1.0/lib/linter/linter.js#L1130
     return this.linter.verify(sourceCode, configArray as any, { filename: fileName });
