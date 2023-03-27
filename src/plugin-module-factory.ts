@@ -55,16 +55,24 @@ function create(info: ts.server.PluginCreateInfo): ts.LanguageService {
   const proxy = new LanguageServiceProxyBuilder(info)
     .wrap("getSemanticDiagnostics", delegate => adapter.getSemanticDiagnostics.bind(adapter, delegate))
     .wrap("getCodeFixesAtPosition", delegate => adapter.getCodeFixesAtPosition.bind(adapter, delegate))
+    .wrap("getSupportedCodeFixes", delegate => (filename?: string | undefined) => [
+      ...delegate(filename),
+      `${TS_LANGSERVICE_ESLINT_DIAGNOSTIC_ERROR_CODE}`,
+    ])
     .build();
   return proxy;
 }
 
 export const pluginModuleFactory: ts.server.PluginModuleFactory = ({ typescript }: { typescript: typeof ts }) => {
-  // NOTE
-  // Now ts.LanguageService does not exported method to get supported fixable codes.
-  // So I monkey-patche to override ts.getSupportedCodeFixes til https://github.com/microsoft/TypeScript/pull/29010 is merged.
-  const delegate = typescript.getSupportedCodeFixes;
-  typescript.getSupportedCodeFixes = () => [...delegate(), `${TS_LANGSERVICE_ESLINT_DIAGNOSTIC_ERROR_CODE}`];
+  try {
+    // NOTE
+    // Now ts.LanguageService does not exported method to get supported fixable codes.
+    // So I monkey-patche to override ts.getSupportedCodeFixes til https://github.com/microsoft/TypeScript/pull/29010 is merged.
+    const delegate = typescript.getSupportedCodeFixes;
+    typescript.getSupportedCodeFixes = () => [...delegate(), `${TS_LANGSERVICE_ESLINT_DIAGNOSTIC_ERROR_CODE}`];
+  } catch {
+    // Nothing to do
+  }
 
   return { create };
 };
