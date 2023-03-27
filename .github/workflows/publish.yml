@@ -1,6 +1,9 @@
 name: publish
 
-on: push
+on:
+  push:
+    tags:
+      - "*"
 
 jobs:
   publish:
@@ -8,7 +11,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [18.x]
 
     steps:
       - uses: actions/checkout@v3
