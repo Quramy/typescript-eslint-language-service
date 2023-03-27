@@ -42,12 +42,10 @@
   "devDependencies": {
     "@types/eslint": "8.4.6",
     "@types/estree": "1.0.0",
-    "@types/is-glob": "4.0.2",
     "@types/jest": "28.1.8",
     "@types/node": "18.15.10",
     "@typescript-eslint/eslint-plugin": "5.26.0",
     "@typescript-eslint/parser": "5.26.0",
-    "@typescript-eslint/typescript-estree": "5.26.0",
     "eslint": "8.25.0",
     "eslint-config-prettier": "8.8.0",
     "fretted-strings": "1.0.1",

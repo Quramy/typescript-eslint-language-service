@@ -66,8 +66,8 @@ describe("LanguageService plugin", () => {
     });
 
     it("should return ESLint error when the project uses @typescript-eslint/parser and be configured with 'eslint:recommended'", async () => {
-      server = createServer({ projectPath: path.resolve(__dirname, "../projects/simple") });
-      const { file, fileContent } = server.readFile("./eslint-recommended/main.ts");
+      server = createServer({ projectPath: path.resolve(__dirname, "../projects/eslint-recommended") });
+      const { file, fileContent } = server.readFile("./main.ts");
       server.send({ command: "open", arguments: { file, fileContent, scriptKindName: "TS" } });
       await server.waitEvent("projectLoadingFinish");
       server.send({ command: "geterr", arguments: { files: [file], delay: 0 } });
