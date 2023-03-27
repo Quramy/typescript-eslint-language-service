@@ -1,20 +1,20 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`LanguageService plugin #getCodeFixes should return codeFixes reported by ESLint rules 1`] = `
-Object {
-  "body": Array [
-    Object {
-      "changes": Array [
-        Object {
+{
+  "body": [
+    {
+      "changes": [
+        {
           "fileName": "<fileName>",
-          "textChanges": Array [
-            Object {
-              "end": Object {
+          "textChanges": [
+            {
+              "end": {
                 "line": 1,
                 "offset": 12,
               },
               "newText": ";",
-              "start": Object {
+              "start": {
                 "line": 1,
                 "offset": 12,
               },
@@ -36,9 +36,9 @@ Object {
 `;
 
 exports[`LanguageService plugin #getSemanticDiagnostics should not reproduce issue #7 1`] = `
-Object {
-  "body": Object {
-    "diagnostics": Array [],
+{
+  "body": {
+    "diagnostics": [],
     "file": "<file>",
   },
   "event": "semanticDiag",
@@ -48,69 +48,69 @@ Object {
 `;
 
 exports[`LanguageService plugin #getSemanticDiagnostics should not reproduce issue 217 1`] = `
-Object {
-  "body": Object {
-    "diagnostics": Array [
-      Object {
+{
+  "body": {
+    "diagnostics": [
+      {
         "category": "error",
         "code": 30010,
-        "end": Object {
+        "end": {
           "line": 2,
           "offset": 16,
         },
-        "start": Object {
+        "start": {
           "line": 2,
           "offset": 3,
         },
-        "text": "[@typescript-eslint/await-thenable] Unexpected \`await\` of a non-Promise (non-\\"Thenable\\") value.",
+        "text": "[@typescript-eslint/await-thenable] Unexpected \`await\` of a non-Promise (non-"Thenable") value.",
       },
-      Object {
+      {
         "category": "error",
         "code": 30010,
-        "end": Object {
+        "end": {
           "line": 6,
           "offset": 29,
         },
-        "start": Object {
+        "start": {
           "line": 6,
           "offset": 14,
         },
         "text": "[@typescript-eslint/no-implied-eval] Implied eval. Consider passing a function.",
       },
-      Object {
+      {
         "category": "error",
         "code": 30010,
-        "end": Object {
+        "end": {
           "line": 10,
           "offset": 17,
         },
-        "start": Object {
+        "start": {
           "line": 10,
           "offset": 15,
         },
         "text": "[@typescript-eslint/no-base-to-string] '{} will evaluate to '[object Object]' when stringified.",
       },
-      Object {
+      {
         "category": "error",
         "code": 30010,
-        "end": Object {
+        "end": {
           "line": 15,
           "offset": 20,
         },
-        "start": Object {
+        "start": {
           "line": 15,
           "offset": 14,
         },
-        "text": "[@typescript-eslint/dot-notation] [\\"prop\\"] is better written in dot notation.",
+        "text": "[@typescript-eslint/dot-notation] ["prop"] is better written in dot notation.",
       },
-      Object {
+      {
         "category": "error",
         "code": 30010,
-        "end": Object {
+        "end": {
           "line": 19,
           "offset": 37,
         },
-        "start": Object {
+        "start": {
           "line": 19,
           "offset": 15,
         },
@@ -126,9 +126,9 @@ Object {
 `;
 
 exports[`LanguageService plugin #getSemanticDiagnostics should not return ESLint error when the project does not use @typescript-eslint/parser 1`] = `
-Object {
-  "body": Object {
-    "diagnostics": Array [],
+{
+  "body": {
+    "diagnostics": [],
     "file": "<file>",
   },
   "event": "semanticDiag",
@@ -138,17 +138,17 @@ Object {
 `;
 
 exports[`LanguageService plugin #getSemanticDiagnostics should return ESLint error when the project is configured with ESLint plugins 1`] = `
-Object {
-  "body": Object {
-    "diagnostics": Array [
-      Object {
+{
+  "body": {
+    "diagnostics": [
+      {
         "category": "error",
         "code": 30010,
-        "end": Object {
+        "end": {
           "line": 2,
           "offset": 10,
         },
-        "start": Object {
+        "start": {
           "line": 2,
           "offset": 9,
         },
@@ -164,17 +164,17 @@ Object {
 `;
 
 exports[`LanguageService plugin #getSemanticDiagnostics should return ESLint error when the project uses @typescript-eslint/parser 1`] = `
-Object {
-  "body": Object {
-    "diagnostics": Array [
-      Object {
+{
+  "body": {
+    "diagnostics": [
+      {
         "category": "error",
         "code": 30010,
-        "end": Object {
+        "end": {
           "line": 1,
           "offset": 13,
         },
-        "start": Object {
+        "start": {
           "line": 1,
           "offset": 12,
         },
@@ -190,17 +190,17 @@ Object {
 `;
 
 exports[`LanguageService plugin #getSemanticDiagnostics should return ESLint error when the project uses @typescript-eslint/parser and be configured with 'eslint:recommended' 1`] = `
-Object {
-  "body": Object {
-    "diagnostics": Array [
-      Object {
+{
+  "body": {
+    "diagnostics": [
+      {
         "category": "error",
         "code": 30010,
-        "end": Object {
+        "end": {
           "line": 1,
           "offset": 10,
         },
-        "start": Object {
+        "start": {
           "line": 1,
           "offset": 1,
         },

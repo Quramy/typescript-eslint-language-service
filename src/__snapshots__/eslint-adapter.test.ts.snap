@@ -1,20 +1,20 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ESLintAdapter #getCodeFixesAtPosition shuld only delegate when input errorCodes does not include TS_LANGSERVICE_ESLINT_DIAGNOSTIC_ERROR_CODE 1`] = `Array []`;
+exports[`ESLintAdapter #getCodeFixesAtPosition shuld only delegate when input errorCodes does not include TS_LANGSERVICE_ESLINT_DIAGNOSTIC_ERROR_CODE 1`] = `[]`;
 
-exports[`ESLintAdapter #getCodeFixesAtPosition shuld only delegate when input range isn't intersected ESLint reported results 1`] = `Array []`;
+exports[`ESLintAdapter #getCodeFixesAtPosition shuld only delegate when input range isn't intersected ESLint reported results 1`] = `[]`;
 
 exports[`ESLintAdapter #getCodeFixesAtPosition shuld return ESLint sourceCodeFixer result as TypeScript codeFixAction format 1`] = `
-Array [
-  Object {
-    "changes": Array [
-      Object {
+[
+  {
+    "changes": [
+      {
         "fileName": "main.ts",
         "isNewFile": false,
-        "textChanges": Array [
-          Object {
-            "newText": "\\"use strict\\"",
-            "span": Object {
+        "textChanges": [
+          {
+            "newText": ""use strict"",
+            "span": {
               "length": 12,
               "start": 11,
             },
@@ -30,8 +30,8 @@ Array [
 `;
 
 exports[`ESLintAdapter #getSemanticDiagnostics shuld return ESLint verification result as TypeScript diagnostic format 1`] = `
-Array [
-  Object {
+[
+  {
     "category": 1,
     "code": 30010,
     "length": 0,
