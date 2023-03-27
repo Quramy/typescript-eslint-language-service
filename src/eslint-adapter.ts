@@ -119,7 +119,7 @@ export class ESLintAdapter {
       throw new InvalidParserError();
     }
     const parserOptions = (configFileContent.parserOptions ? configFileContent.parserOptions : {}) as ParserOptions;
-    const sourceCode = this.converter.convertToESLintSourceCode(sourceFile, parserOptions);
+    const sourceCode = this.converter.convertToESLintSourceCode(sourceFile, fileName, parserOptions);
 
     // See https://github.com/eslint/eslint/blob/v6.1.0/lib/linter/linter.js#L1130
     return this.linter.verify(sourceCode, configArray as any, { filename: fileName });

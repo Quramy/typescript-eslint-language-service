@@ -33,9 +33,7 @@ function create(info: ts.server.PluginCreateInfo): ts.LanguageService {
     return program;
   };
 
-  const converter = new AstConverter({
-    getProgram,
-  });
+  const converter = new AstConverter();
 
   const configProvider = new ESLintConfigProvider({
     directoriesToWatch: watchDirs,
