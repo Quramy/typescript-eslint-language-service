@@ -49,7 +49,7 @@
     "@typescript-eslint/parser": "5.26.0",
     "@typescript-eslint/typescript-estree": "5.26.0",
     "eslint": "8.25.0",
-    "eslint-config-prettier": "8.5.0",
+    "eslint-config-prettier": "8.8.0",
     "fretted-strings": "1.0.1",
     "husky": "8.0.1",
     "jest": "28.1.3",
