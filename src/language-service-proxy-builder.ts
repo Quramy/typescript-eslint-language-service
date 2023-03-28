@@ -21,6 +21,7 @@ export class LanguageServiceProxyBuilder {
   public build(): ts.LanguageService {
     const ret = this.info.languageService;
     this.wrappers.forEach(({ name, wrapper }) => {
+      if (!this.info.languageService[name as keyof ts.LanguageService]) return;
       (ret as any)[name] = wrapper(this.info.languageService[name as keyof ts.LanguageService], this.info);
     });
     return ret;
