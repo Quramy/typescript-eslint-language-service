@@ -88,7 +88,7 @@ exports[`LanguageService plugin #getSemanticDiagnostics should not reproduce iss
           "line": 10,
           "offset": 15,
         },
-        "text": "[@typescript-eslint/no-base-to-string] '{} will evaluate to '[object Object]' when stringified.",
+        "text": "[@typescript-eslint/no-base-to-string] '{}' will evaluate to '[object Object]' when stringified.",
       },
       {
         "category": "error",
