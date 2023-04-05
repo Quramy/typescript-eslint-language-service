@@ -7,9 +7,6 @@ module.exports = {
   parser: "@typescript-eslint/parser",
   extends: ["eslint:recommended"],
   parserOptions: {
-    project: "../tsconfig.json",
-  },
-  rules: {
-    semi: 2,
+    project: "./tsconfig.json",
   },
 };

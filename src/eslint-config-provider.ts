@@ -70,14 +70,20 @@ export class ESLintConfigProvider implements ConfigProvider {
     return this.factory.getConfigArrayForFile(fileName).extractConfig(fileName);
   }
 
-  private resolveESLintIntrinsicConfigPath(name: "eslint-all" | "eslint-recommended") {
-    let ret: string | undefined = undefined;
+  private resolveESLintIntrinsicConfigPath(name: "eslint-all" | "eslint-recommended"): string | undefined {
     try {
-      const fragments = require.resolve("eslint").split(path.join("node_modules", "eslint"));
-      ret = path.join(...fragments.slice(0, fragments.length - 1), "node_modules", "eslint", "conf", `${name}.js`);
-    } catch (e: any) {
-      this.log(e);
+      // Config js files move to @eslint/js package sinse ESLint v8.35.
+      // https://github.com/eslint/eslint/pull/16844
+      return require.resolve(`@eslint/js/src/configs/${name}`);
+    } catch {
+      try {
+        // For legacy ESLint < v8.35
+        const fragments = require.resolve("eslint").split(path.join("node_modules", "eslint"));
+        return path.join(...fragments.slice(0, fragments.length - 1), "node_modules", "eslint", "conf", `${name}.js`);
+      } catch (e) {
+        this.log(String(e));
+      }
     }
-    return ret;
+    return undefined;
   }
 }
