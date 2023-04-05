@@ -78,8 +78,8 @@ export class ESLintConfigProvider implements ConfigProvider {
     } catch {
       try {
         // For legacy ESLint < v8.35
-        const fragments = require.resolve("eslint").split("node_modules/eslint");
-        return [...fragments.slice(0, fragments.length - 1), `/conf/${name}.js`].join("node_modules/eslint");
+        const fragments = require.resolve("eslint").split(path.join("node_modules", "eslint"));
+        return path.join(...fragments.slice(0, fragments.length - 1), "node_modules", "eslint", "conf", `${name}.js`);
       } catch (e) {
         this.log(String(e));
       }

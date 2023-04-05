@@ -1,3 +1,4 @@
+import path from "path";
 import ts from "typescript";
 import { SourceCode, Linter, ESLint } from "eslint";
 import { parseForESLint, type ParserOptions } from "@typescript-eslint/parser";
@@ -134,7 +135,7 @@ export class ESLintAdapter {
     if (this.ignoredFilepathMap.get(fileName) === true) return [];
     const configArray = this.configProvider.getConfigArrayForFile(fileName);
     const configFileContent = configArray.extractConfig(fileName).toCompatibleObjectAsConfigFileContent();
-    if (!isParserModuleNameValid(configFileContent.parser, "@typescript-eslint/parser")) {
+    if (!isParserModuleNameValid(configFileContent.parser, path.join("@typescript-eslint", "parser"))) {
       throw new InvalidParserError();
     }
     const parserOptions = (configFileContent.parserOptions ? configFileContent.parserOptions : {}) as ParserOptions;
@@ -145,7 +146,7 @@ export class ESLintAdapter {
   }
 
   public checkFileToBeIgnored(fileName: string) {
-    if (fileName.indexOf("node_modules/") !== -1) return;
+    if (fileName.indexOf("node_modules" + path.sep) !== -1) return;
     if (!fileName.endsWith(".ts") && !fileName.endsWith(".tsx")) return;
     Promise.resolve()
       .then(() => new ESLint())
