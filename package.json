@@ -46,7 +46,7 @@
     "@types/node": "18.15.11",
     "@typescript-eslint/eslint-plugin": "5.26.0",
     "@typescript-eslint/parser": "5.26.0",
-    "eslint": "8.37.0",
+    "eslint": "8.38.0",
     "eslint-config-prettier": "8.8.0",
     "fretted-strings": "1.0.1",
     "husky": "8.0.3",
