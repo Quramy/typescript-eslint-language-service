@@ -146,7 +146,7 @@ export class ESLintAdapter {
   }
 
   public checkFileToBeIgnored(fileName: string) {
-    if (fileName.indexOf("node_modules" + path.sep) !== -1) return;
+    if (/node_modules[\\/]/.test(fileName)) return;
     if (!fileName.endsWith(".ts") && !fileName.endsWith(".tsx")) return;
     Promise.resolve()
       .then(() => new ESLint())
