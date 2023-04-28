@@ -146,8 +146,10 @@ export class ESLintAdapter {
   }
 
   public checkFileToBeIgnored(fileName: string) {
-    if (/node_modules[\\/]/.test(fileName)) return;
-    if (!fileName.endsWith(".ts") && !fileName.endsWith(".tsx")) return;
+    if (/node_modules[\\/]/.test(fileName) || (!fileName.endsWith(".ts") && !fileName.endsWith(".tsx"))) {
+      this.ignoredFilepathMap.set(fileName, true);
+      return;
+    }
     Promise.resolve()
       .then(() => new ESLint())
       .then(eslint => eslint.isPathIgnored(fileName))
