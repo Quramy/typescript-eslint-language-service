@@ -132,7 +132,7 @@ export class ESLintAdapter {
   }
 
   private getESLintResult(fileName: string, sourceFile: ts.SourceFile) {
-    if (this.ignoredFilepathMap.get(fileName) === true) return [];
+    if (this.ignoredFilepathMap.get(fileName.replace(/\\/g, '/')) === true) return [];
     const configArray = this.configProvider.getConfigArrayForFile(fileName);
     const configFileContent = configArray.extractConfig(fileName).toCompatibleObjectAsConfigFileContent();
     if (!isParserModuleNameValid(configFileContent.parser, path.join("@typescript-eslint", "parser"))) {
@@ -146,12 +146,12 @@ export class ESLintAdapter {
   }
 
   public checkFileToBeIgnored(fileName: string) {
-    if (fileName.indexOf("node_modules" + path.sep) !== -1) return;
-    if (!fileName.endsWith(".ts") && !fileName.endsWith(".tsx")) return;
+    if (/node_modules[\\/]/i.test(fileName) || !/\.tsx?$/i.test(fileName)) return;
+    const normalized = fileName.replace(/\\/g, '/');
     Promise.resolve()
       .then(() => new ESLint())
-      .then(eslint => eslint.isPathIgnored(fileName))
-      .then(result => this.ignoredFilepathMap.set(fileName, result));
+      .then(eslint => eslint.isPathIgnored(normalized))
+      .then(result => this.ignoredFilepathMap.set(normalized, result));
   }
 
   public getSemanticDiagnostics(
