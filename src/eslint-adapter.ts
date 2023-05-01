@@ -100,6 +100,7 @@ export class ESLintAdapter {
   private readonly configProvider: ConfigProvider;
   private readonly getSourceFile: (fileName: string) => ts.SourceFile | undefined;
   private readonly ignoredFilepathMap: Map<string, boolean>;
+  private readonly eslint: ESLint;
 
   public constructor({ logger, configProvider, getSourceFile }: ESLintAdapterOptions) {
     this.linter = new Linter();
@@ -107,6 +108,7 @@ export class ESLintAdapter {
     this.configProvider = configProvider;
     this.getSourceFile = getSourceFile;
     this.ignoredFilepathMap = new Map();
+    this.eslint = new ESLint();
   }
 
   private convertToESLintSourceCode(src: ts.SourceFile, filename: string, options?: ParserOptions | null) {
@@ -132,7 +134,7 @@ export class ESLintAdapter {
   }
 
   private getESLintResult(fileName: string, sourceFile: ts.SourceFile) {
-    if (this.ignoredFilepathMap.get(fileName.replace(/\\/g, '/')) === true) return [];
+    if (this.shouldIgnoreFile(fileName)) return [];
     const configArray = this.configProvider.getConfigArrayForFile(fileName);
     const configFileContent = configArray.extractConfig(fileName).toCompatibleObjectAsConfigFileContent();
     if (!isParserModuleNameValid(configFileContent.parser, path.join("@typescript-eslint", "parser"))) {
@@ -145,13 +147,24 @@ export class ESLintAdapter {
     return this.linter.verify(sourceCode, configArray as any, { filename: fileName });
   }
 
+  private shouldIgnoreFile(fileName: string) {
+    const normalized = fileName.replace(/\\/g, "/");
+    if (/node_modules\//i.test(normalized) || !/\.tsx?$/i.test(normalized)) {
+      return true;
+    }
+    const cached = this.ignoredFilepathMap.get(normalized);
+    if (cached !== undefined) {
+      return cached;
+    }
+    // don't know but we will next time
+    Promise.resolve(this.eslint.isPathIgnored(normalized)).then(ignored =>
+      this.ignoredFilepathMap.set(normalized, ignored),
+    );
+    return undefined;
+  }
+
   public checkFileToBeIgnored(fileName: string) {
-    if (/node_modules[\\/]/i.test(fileName) || !/\.tsx?$/i.test(fileName)) return;
-    const normalized = fileName.replace(/\\/g, '/');
-    Promise.resolve()
-      .then(() => new ESLint())
-      .then(eslint => eslint.isPathIgnored(normalized))
-      .then(result => this.ignoredFilepathMap.set(normalized, result));
+    this.shouldIgnoreFile(fileName);
   }
 
   public getSemanticDiagnostics(
