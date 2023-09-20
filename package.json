@@ -43,7 +43,7 @@
     "@types/eslint": "8.44.2",
     "@types/estree": "1.0.1",
     "@types/jest": "29.5.5",
-    "@types/node": "18.17.17",
+    "@types/node": "18.17.18",
     "@typescript-eslint/eslint-plugin": "5.26.0",
     "@typescript-eslint/parser": "5.26.0",
     "eslint": "8.49.0",
