@@ -21,14 +21,15 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+          cache: npm
       - name: npm install, build, and test
         run: |
-          yarn --frozen-lockfile
-          yarn build
-          yarn format:check
-          yarn lint
-          yarn test
+          npm ci
+          npm run build
+          npm run format:check
+          npm run lint
+          npm run test
           /bin/bash e2e/setup.sh
-          yarn e2e
+          npm run e2e
         env:
           CI: true

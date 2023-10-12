@@ -7,14 +7,14 @@
     "lib"
   ],
   "scripts": {
-    "clean": "rimraf local lib \"e2e/**/*.log\"",
+    "clean": "rimraf -g local lib \"e2e/**/*.log\"",
     "build": "tsc -p tsconfig.build.json",
     "build:local": "tsc -p tsconfig.build.json --outDir local",
     "lint": "eslint \"src/**/*.ts\" \"e2e/**/*.ts\"",
     "test": "jest",
     "prettier": "prettier \"*.md\" \"*.json\" \"*.yml\" \"src/**/*\" \"e2e/**/*\"",
-    "format": "yarn prettier --write",
-    "format:check": "yarn prettier --check",
+    "format": "npm run prettier -- --write",
+    "format:check": "npm run prettier -- --check",
     "e2e": "jest --config e2e/jest.config.json",
     "postinstall": "husky install",
     "prepublishOnly": "pinst --disable",

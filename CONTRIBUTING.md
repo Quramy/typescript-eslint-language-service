@@ -1,37 +1,37 @@
 ## Setup
 
 ```sh
-$ yarn --pure-lockfile
+$ npm install
 ```
 
 ```sh
-$ yarn build:local
+$ npm run build:local
 ```
 
 The above command builds this plugin under `local` directory.
 And the built module is referenced from this project's tsconfig.json.
 So, whenever you edit the source code of this project, this plugin itself tell you ESLint errors on your editor.
 
-If you want to update modules in `local` dir, exec `yarn build:local` .
+If you want to update modules in `local` dir, exec `npm run build:local` .
 
 ## Test
 
 ### Unit test
 
 ```sh
-$ yarn test
+$ npm run test
 ```
 
 ### Lint
 
 ```sh
-$ yarn lint
+$ npm run lint
 ```
 
 ### E2E
 
 ```sh
-$ yarn build
+$ npm run build
 $ ./e2e/setup.sh
-$ yarn e2e
+$ npm run e2e
 ```
