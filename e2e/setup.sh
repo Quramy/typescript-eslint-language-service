@@ -1,7 +1,7 @@
 #!/bin/sh
 
 BASE_DIR=$(cd $(dirname $0); pwd)
-yarn link
+npm link
 
 TS_VER=$(node -e "console.log(require('./package.json').devDependencies['typescript'])")
 TSESLINT_VER=$(node -e "console.log(require('./package.json').devDependencies['@typescript-eslint/parser'])")
@@ -25,7 +25,7 @@ const ret = {
 console.log(JSON.stringify(ret, null, 2));
 EOF
   mv PKG package.json
-  yarn
-  yarn link typescript-eslint-language-service
+  npm i
+  npm link typescript-eslint-language-service
   popd
 done
