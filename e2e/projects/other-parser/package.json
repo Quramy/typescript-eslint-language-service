@@ -8,6 +8,6 @@
     "@babel/core": "7.23.3",
     "@babel/eslint-parser": "7.23.3",
     "eslint": "8.54.0",
-    "typescript": "5.2.2"
+    "typescript": "5.3.2"
   }
 }
