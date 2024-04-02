@@ -1,6 +1,6 @@
 import path from "path";
 import ts from "typescript";
-import { mark, Frets } from "fretted-strings";
+import extract from "fretted-strings";
 import { ESLintAdapter } from "./eslint-adapter";
 import { ConfigProvider } from "./eslint-config-provider";
 import { Legacy } from "@eslint/eslintrc";
@@ -53,14 +53,12 @@ describe("ESLintAdapter", () => {
       configProvider.conf.rules = {
         quotes: [2, "double"],
       };
-      const frets: Frets = {};
-      const content = mark(
+      const [content, frets] = extract(
         `
           'use strict';     
      %%%  ^           ^   %%%
      %%%  p1          p2  %%%
         `,
-        frets,
       );
       const adapter = new ESLintAdapter({
         getSourceFile: () => ts.createSourceFile("main.ts", content, ts.ScriptTarget.ESNext, true),
@@ -76,8 +74,7 @@ describe("ESLintAdapter", () => {
       configProvider.conf.rules = {
         quotes: [2, "double"],
       };
-      const frets: Frets = {};
-      const content = mark(
+      const [content, frets] = extract(
         `
           'use strict';     
 
@@ -85,7 +82,6 @@ describe("ESLintAdapter", () => {
      %%%  ^             ^   %%%
      %%%  p1            p2  %%%
         `,
-        frets,
       );
       const adapter = new ESLintAdapter({
         getSourceFile: () => ts.createSourceFile("main.ts", content, ts.ScriptTarget.ESNext, true),
@@ -109,14 +105,12 @@ describe("ESLintAdapter", () => {
       configProvider.conf.rules = {
         quotes: [2, "double"],
       };
-      const frets: Frets = {};
-      const content = mark(
+      const [content, frets] = extract(
         `
           'use strict';     
      %%%  ^           ^   %%%
      %%%  p1          p2  %%%
         `,
-        frets,
       );
       const adapter = new ESLintAdapter({
         getSourceFile: () => ts.createSourceFile("main.ts", content, ts.ScriptTarget.ESNext, true),
