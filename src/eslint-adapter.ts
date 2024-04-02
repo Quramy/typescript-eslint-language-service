@@ -18,8 +18,8 @@ export function translateToDiagnosticsFromESLintResult(
       severity === 2
         ? ts.DiagnosticCategory.Error
         : severity === 1
-        ? ts.DiagnosticCategory.Warning
-        : ts.DiagnosticCategory.Suggestion;
+          ? ts.DiagnosticCategory.Warning
+          : ts.DiagnosticCategory.Suggestion;
 
     /**
      * ESLint uses 1-started index. On the other hand, TypeScript 0-started index.
