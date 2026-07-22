@@ -52,7 +52,7 @@
     "prettier": "3.9.5",
     "pretty-quick": "4.2.2",
     "rimraf": "5.0.10",
-    "ts-jest": "29.4.5",
+    "ts-jest": "29.4.12",
     "typescript": "5.9.3"
   },
   "jest": {
