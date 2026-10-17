@@ -6,7 +6,7 @@
   },
   "devDependencies": {
     "@babel/core": "7.29.7",
-    "@babel/eslint-parser": "7.29.7",
+    "@babel/eslint-parser": "7.29.9",
     "eslint": "8.57.1",
     "typescript": "5.9.3"
   }
